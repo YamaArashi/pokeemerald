@@ -109,7 +109,11 @@ SHELL := bash -o pipefail
 ASFLAGS := -mcpu=arm7tdmi --defsym MODERN=$(MODERN)
 
 INCLUDE_DIRS := include
-INCLUDE_CPP_ARGS := $(INCLUDE_DIRS:%=-iquote %)
+ifdef CLION_IDE
+  INCLUDE_CPP_ARGS := $(INCLUDE_DIRS:%=-iquote%)
+else
+  INCLUDE_CPP_ARGS := $(INCLUDE_DIRS:%=-iquote %)
+endif
 INCLUDE_SCANINC_ARGS := $(INCLUDE_DIRS:%=-I %)
 
 O_LEVEL ?= 2
