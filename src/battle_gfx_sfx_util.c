@@ -710,9 +710,17 @@ void DecompressTrainerFrontPic(u16 frontPicId, u8 battlerId)
 void DecompressTrainerBackPic(u16 backPicId, u8 battlerId)
 {
     u8 position = GetBattlerPosition(battlerId);
+#ifdef BUGFIX
+    CpuCopy32(gTrainerBackPicTable[backPicId].data, gMonSpritesGfxPtr->sprites.ptr[position], gTrainerBackPicTable[backPicId].size);
+#else
+    // Trainer back pics aren't compressed!
+    // Attempting to decompress the uncompressed data can softlock or crash the game.
+    // This is ok in vanilla by chance, because the pixels in the trainer back sprites that correspond
+    // to the compressed data's header are all 0, so the decompression does nothing.
     DecompressPicFromTable_2(&gTrainerBackPicTable[backPicId],
                              gMonSpritesGfxPtr->sprites.ptr[position],
                              SPECIES_NONE);
+#endif
     LoadCompressedPalette(gTrainerBackPicPaletteTable[backPicId].data,
                           OBJ_PLTT_ID(battlerId), PLTT_SIZE_4BPP);
 }
