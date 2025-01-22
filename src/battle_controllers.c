@@ -1417,10 +1417,10 @@ void BtlController_EmitFaintingCry(u8 bufferId)
     PrepareBufferDataTransfer(bufferId, sBattleBuffersTransferData, 4);
 }
 
-void BtlController_EmitIntroSlide(u8 bufferId, u8 terrainId)
+void BtlController_EmitIntroSlide(u8 bufferId, u8 environmentId)
 {
     sBattleBuffersTransferData[0] = CONTROLLER_INTROSLIDE;
-    sBattleBuffersTransferData[1] = terrainId;
+    sBattleBuffersTransferData[1] = environmentId;
     PrepareBufferDataTransfer(bufferId, sBattleBuffersTransferData, 2);
 }
 

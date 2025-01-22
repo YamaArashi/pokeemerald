@@ -232,7 +232,7 @@ void BtlController_EmitCantSwitch(u8 bufferId);
 void BtlController_EmitPlaySE(u8 bufferId, u16 songId);
 void BtlController_EmitPlayFanfareOrBGM(u8 bufferId, u16 songId, bool8 playBGM);
 void BtlController_EmitFaintingCry(u8 bufferId);
-void BtlController_EmitIntroSlide(u8 bufferId, u8 terrainId);
+void BtlController_EmitIntroSlide(u8 bufferId, u8 environmentId);
 void BtlController_EmitIntroTrainerBallThrow(u8 bufferId);
 void BtlController_EmitDrawPartyStatusSummary(u8 bufferId, struct HpAndStatus* hpAndStatus, u8 flags);
 void BtlController_EmitHidePartyStatusSummary(u8 bufferId);

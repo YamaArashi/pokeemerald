@@ -13,9 +13,9 @@ static void AnimComplexPaletteBlend(struct Sprite *);
 static void AnimComplexPaletteBlend_Step1(struct Sprite *);
 static void AnimComplexPaletteBlend_Step2(struct Sprite *);
 static void AnimCirclingSparkle(struct Sprite *);
-static void AnimShakeMonOrBattleTerrain(struct Sprite *);
-static void AnimShakeMonOrBattleTerrain_Step(struct Sprite *);
-static void AnimShakeMonOrBattleTerrain_UpdateCoordOffsetEnabled(void);
+static void AnimShakeMonOrBattlePlatforms(struct Sprite *);
+static void AnimShakeMonOrBattlePlatforms_Step(struct Sprite *);
+static void AnimShakeMonOrBattlePlatforms_UpdateCoordOffsetEnabled(void);
 static void AnimHitSplatBasic(struct Sprite *);
 static void AnimHitSplatPersistent(struct Sprite *);
 static void AnimHitSplatHandleInvert(struct Sprite *);
@@ -33,7 +33,7 @@ static void BlendColorCycleByTag(u8, u8, u8);
 static void AnimTask_BlendColorCycleByTagLoop(u8);
 static void AnimTask_FlashAnimTagWithColor_Step1(u8);
 static void AnimTask_FlashAnimTagWithColor_Step2(u8);
-static void AnimTask_ShakeBattleTerrain_Step(u8);
+static void AnimTask_ShakeBattlePlatforms_Step(u8);
 
 static const union AnimCmd sAnim_ConfusionDuck_0[] =
 {
@@ -119,7 +119,7 @@ static const struct SpriteTemplate sCirclingSparkleSpriteTemplate =
     .callback = AnimCirclingSparkle,
 };
 
-const struct SpriteTemplate gShakeMonOrTerrainSpriteTemplate =
+const struct SpriteTemplate gShakeMonOrPlatformSpriteTemplate =
 {
     .tileTag = 0,
     .paletteTag = 0,
@@ -127,7 +127,7 @@ const struct SpriteTemplate gShakeMonOrTerrainSpriteTemplate =
     .anims = gDummySpriteAnimTable,
     .images = NULL,
     .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = AnimShakeMonOrBattleTerrain,
+    .callback = AnimShakeMonOrBattlePlatforms,
 };
 
 static const union AffineAnimCmd sAffineAnim_HitSplat_0[] =
@@ -795,7 +795,7 @@ void AnimTask_TintPalettes(u8 taskId)
 #undef tColorG
 #undef tColorB
 
-static void AnimShakeMonOrBattleTerrain(struct Sprite *sprite)
+static void AnimShakeMonOrBattlePlatforms(struct Sprite *sprite)
 {
     u16 var0;
 
@@ -825,12 +825,12 @@ static void AnimShakeMonOrBattleTerrain(struct Sprite *sprite)
     sprite->data[5] = gBattleAnimArgs[3];
     var0 = sprite->data[5] - 2;
     if (var0 < 2)
-        AnimShakeMonOrBattleTerrain_UpdateCoordOffsetEnabled();
+        AnimShakeMonOrBattlePlatforms_UpdateCoordOffsetEnabled();
 
-    sprite->callback = AnimShakeMonOrBattleTerrain_Step;
+    sprite->callback = AnimShakeMonOrBattlePlatforms_Step;
 }
 
-static void AnimShakeMonOrBattleTerrain_Step(struct Sprite *sprite)
+static void AnimShakeMonOrBattlePlatforms_Step(struct Sprite *sprite)
 {
     u8 i;
     u16 var0;
@@ -863,7 +863,7 @@ static void AnimShakeMonOrBattleTerrain_Step(struct Sprite *sprite)
     }
 }
 
-static void AnimShakeMonOrBattleTerrain_UpdateCoordOffsetEnabled(void)
+static void AnimShakeMonOrBattlePlatforms_UpdateCoordOffsetEnabled(void)
 {
     gSprites[gBattlerSpriteIds[gBattleAnimAttacker]].coordOffsetEnabled = FALSE;
     gSprites[gBattlerSpriteIds[gBattleAnimTarget]].coordOffsetEnabled = FALSE;
@@ -882,19 +882,19 @@ static void AnimShakeMonOrBattleTerrain_UpdateCoordOffsetEnabled(void)
     }
 }
 
-// Task data for AnimTask_ShakeBattleTerrain
+// Task data for AnimTask_ShakeBattlePlatforms
 #define tXOffset     data[0]
 #define tYOffset     data[1]
 #define tNumShakes   data[2]
 #define tTimer       data[3]
 #define tShakeDelay  data[8]
 
-// Can shake battle terrain back and forth on the X or down and back to original pos on Y (cant shake up from orig pos)
+// Can shake battle platforms back and forth on the X or down and back to original pos on Y (cant shake up from orig pos)
 // arg0: x offset of shake
 // arg1: y offset of shake
 // arg2: number of shakes
 // arg3: time between shakes
-void AnimTask_ShakeBattleTerrain(u8 taskId)
+void AnimTask_ShakeBattlePlatforms(u8 taskId)
 {
     gTasks[taskId].tXOffset = gBattleAnimArgs[0];
     gTasks[taskId].tYOffset = gBattleAnimArgs[1];
@@ -903,11 +903,11 @@ void AnimTask_ShakeBattleTerrain(u8 taskId)
     gTasks[taskId].tShakeDelay = gBattleAnimArgs[3];
     gBattle_BG3_X = gBattleAnimArgs[0];
     gBattle_BG3_Y = gBattleAnimArgs[1];
-    gTasks[taskId].func = AnimTask_ShakeBattleTerrain_Step;
+    gTasks[taskId].func = AnimTask_ShakeBattlePlatforms_Step;
     gTasks[taskId].func(taskId);
 }
 
-static void AnimTask_ShakeBattleTerrain_Step(u8 taskId)
+static void AnimTask_ShakeBattlePlatforms_Step(u8 taskId)
 {
     if (gTasks[taskId].tTimer == 0)
     {

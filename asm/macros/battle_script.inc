@@ -1044,7 +1044,7 @@
 	.byte 0xcb
 	.endm
 
-	.macro callterrainattack
+	.macro callenvironmentattack
 	.byte 0xcc
 	.endm
 
@@ -1192,7 +1192,7 @@
 	.4byte \ptr
 	.endm
 
-	.macro settypetoterrain ptr:req
+	.macro settypetoenvironment ptr:req
 	.byte 0xeb
 	.4byte \ptr
 	.endm
