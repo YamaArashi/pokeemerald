@@ -432,7 +432,7 @@ struct PokemonStorageSystemData
     u16 scrollUnused5; // Never read
     u16 scrollUnused6; // Never read
     u8 filler1[22];
-    u8 boxTitleTiles[1024];
+    u8 ALIGNED(2) boxTitleTiles[1024];
     u8 boxTitleCycleId;
     u8 wallpaperLoadState; // Written to, but never read.
     u8 wallpaperLoadBoxId;
