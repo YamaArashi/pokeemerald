@@ -942,7 +942,7 @@ static void OpenContextMenu(u8 taskId)
         gPyramidBagMenu->menuActionsCount = ARRAY_COUNT(sMenuActionIds_Field);
         break;
     case PYRAMIDBAG_LOC_BATTLE:
-        if (ItemId_GetBattleUsage(gSpecialVar_ItemId))
+        if (ItemId_GetBattleUsage(gSpecialVar_ItemId) != ITEM_B_USE_NONE)
         {
             gPyramidBagMenu->menuActionIds = sMenuActionIds_Battle;
             gPyramidBagMenu->menuActionsCount = ARRAY_COUNT(sMenuActionIds_Battle);
