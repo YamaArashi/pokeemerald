@@ -557,12 +557,6 @@ void ReadGbaPalette(char *path, struct Palette *palette)
 		palette->colors[i].green = UPCONVERT_BIT_DEPTH(GET_GBA_PAL_GREEN(paletteEntry));
 		palette->colors[i].blue = UPCONVERT_BIT_DEPTH(GET_GBA_PAL_BLUE(paletteEntry));
 	}
-	// png can only accept 16 or 256 colors, so fill the remainder with black
-	if (palette->numColors > 16)
-    {
-	    memset(&palette->colors[palette->numColors], 0, (256 - palette->numColors) * sizeof(struct Color));
-	    palette->numColors = 256;
-    }
 
 	free(data);
 }
