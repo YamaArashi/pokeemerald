@@ -29,9 +29,9 @@ EventScript_FrontierFieldWhiteOut::
 	waitbuttonpress
 	pike_inchallenge
 	goto_if_eq VAR_RESULT, TRUE, BattleFrontier_BattlePike_EventScript_Retire
-	pyramid_inchallenge
-	goto_if_eq VAR_RESULT, 1, BattleFrontier_BattlePyramid_EventScript_WarpToLobbyLost  @ On Pyramid floor
-	goto_if_eq VAR_RESULT, 2, BattleFrontier_BattlePyramid_EventScript_WarpToLobbyLost  @ On Pyramid peak
+	pyramid_getlocation
+	goto_if_eq VAR_RESULT, PYRAMID_LOCATION_FLOOR, BattleFrontier_BattlePyramid_EventScript_WarpToLobbyLost
+	goto_if_eq VAR_RESULT, PYRAMID_LOCATION_TOP, BattleFrontier_BattlePyramid_EventScript_WarpToLobbyLost
 	trainerhill_inchallenge
 	goto_if_eq VAR_RESULT, TRUE, TrainerHill_1F_EventScript_Lost
 	special Script_FadeOutMapMusic

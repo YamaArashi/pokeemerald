@@ -336,7 +336,7 @@ static void ShowMapNamePopUpWindow(void)
     u8 x;
     const u8 *mapDisplayHeaderSource;
 
-    if (InBattlePyramid())
+    if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
     {
         if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_TOP)
         {

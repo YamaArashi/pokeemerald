@@ -9684,7 +9684,7 @@ static void Cmd_pickup(void)
     {
 
     }
-    else if (InBattlePyramid())
+    else if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
     {
         for (i = 0; i < PARTY_SIZE; i++)
         {

@@ -79,7 +79,7 @@ static void HidePyramidItem(void);
 static void SetPyramidFacilityTrainers(void);
 static void ShowPostBattleHintText(void);
 static void UpdatePyramidWinStreak(void);
-static void GetInBattlePyramid(void);
+static void GetCurrentBattlePyramidLocation(void);
 static void UpdatePyramidLightRadius(void);
 static void ClearPyramidPartyHeldItems(void);
 static void SetPyramidFloorPalette(void);
@@ -798,7 +798,7 @@ static void (* const sBattlePyramidFunctions[])(void) =
     [BATTLE_PYRAMID_FUNC_SET_TRAINERS]      = SetPyramidFacilityTrainers,
     [BATTLE_PYRAMID_FUNC_SHOW_HINT_TEXT]    = ShowPostBattleHintText,
     [BATTLE_PYRAMID_FUNC_UPDATE_STREAK]     = UpdatePyramidWinStreak,
-    [BATTLE_PYRAMID_FUNC_IS_IN]             = GetInBattlePyramid,
+    [BATTLE_PYRAMID_FUNC_CURRENT_LOCATION]  = GetCurrentBattlePyramidLocation,
     [BATTLE_PYRAMID_FUNC_UPDATE_LIGHT]      = UpdatePyramidLightRadius,
     [BATTLE_PYRAMID_FUNC_CLEAR_HELD_ITEMS]  = ClearPyramidPartyHeldItems,
     [BATTLE_PYRAMID_FUNC_SET_FLOOR_PALETTE] = SetPyramidFloorPalette,
@@ -1113,9 +1113,9 @@ static void UpdatePyramidWinStreak(void)
         gSaveBlock2Ptr->frontier.pyramidRecordStreaks[lvlMode] = gSaveBlock2Ptr->frontier.pyramidWinStreaks[lvlMode];
 }
 
-static void GetInBattlePyramid(void)
+static void GetCurrentBattlePyramidLocation(void)
 {
-    gSpecialVar_Result = InBattlePyramid();
+    gSpecialVar_Result = CurrentBattlePyramidLocation();
 }
 
 static void UpdatePyramidLightRadius(void)
@@ -1419,14 +1419,14 @@ u8 GetPyramidRunMultiplier(void)
     return sPyramidFloorTemplates[id].runMultiplier;
 }
 
-u8 InBattlePyramid(void)
+u8 CurrentBattlePyramidLocation(void)
 {
     if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
-        return 1;
+        return PYRAMID_LOCATION_FLOOR;
     else if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_TOP)
-        return 2;
+        return PYRAMID_LOCATION_TOP;
     else
-        return FALSE;
+        return PYRAMID_LOCATION_NONE;
 }
 
 bool8 InBattlePyramid_(void)
@@ -1437,7 +1437,7 @@ bool8 InBattlePyramid_(void)
 
 void PausePyramidChallenge(void)
 {
-    if (InBattlePyramid())
+    if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
     {
         RestorePyramidPlayerParty();
         gSaveBlock2Ptr->frontier.challengeStatus = CHALLENGE_STATUS_PAUSED;
@@ -1448,7 +1448,7 @@ void PausePyramidChallenge(void)
 
 void SoftResetInBattlePyramid(void)
 {
-    if (InBattlePyramid())
+    if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
         DoSoftReset();
 }
 

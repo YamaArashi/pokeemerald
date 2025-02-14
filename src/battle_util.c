@@ -426,7 +426,7 @@ bool8 TryRunFromBattle(u8 battler)
     }
     else if (gBattleMons[battler].ability == ABILITY_RUN_AWAY)
     {
-        if (InBattlePyramid())
+        if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
         {
             gBattleStruct->runTries++;
             pyramidMultiplier = GetPyramidRunMultiplier();
@@ -453,7 +453,7 @@ bool8 TryRunFromBattle(u8 battler)
     {
         if (!(gBattleTypeFlags & BATTLE_TYPE_DOUBLE))
         {
-            if (InBattlePyramid())
+            if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
             {
                 pyramidMultiplier = GetPyramidRunMultiplier();
                 speedVar = (gBattleMons[battler].speed * pyramidMultiplier) / (gBattleMons[BATTLE_OPPOSITE(battler)].speed) + (gBattleStruct->runTries * 30);

@@ -102,7 +102,7 @@ static void SetUpItemUseCallback(u8 taskId)
         type = gTasks[taskId].tEnigmaBerryType - 1;
     else
         type = ItemId_GetType(gSpecialVar_ItemId) - 1;
-    if (!InBattlePyramid())
+    if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
     {
         gBagMenu->newScreenCallback = sItemUseCallbacks[type];
         Task_FadeAndCloseBagMenu(taskId);
@@ -144,7 +144,7 @@ static void DisplayCannotUseItemMessage(u8 taskId, bool8 isUsingRegisteredKeyIte
     StringExpandPlaceholders(gStringVar4, str);
     if (!isUsingRegisteredKeyItemOnField)
     {
-        if (!InBattlePyramid())
+        if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
             DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, CloseItemMessage);
         else
             DisplayItemMessageInBattlePyramid(taskId, gText_DadsAdvice, Task_CloseBattlePyramidBagMessage);
@@ -826,7 +826,7 @@ static void RemoveUsedItem(void)
     RemoveBagItem(gSpecialVar_ItemId, 1);
     CopyItemName(gSpecialVar_ItemId, gStringVar2);
     StringExpandPlaceholders(gStringVar4, gText_PlayerUsedVar2);
-    if (!InBattlePyramid())
+    if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
     {
         UpdatePocketItemList(ItemId_GetPocket(gSpecialVar_ItemId));
         UpdatePocketListPosition(ItemId_GetPocket(gSpecialVar_ItemId));
@@ -842,7 +842,7 @@ void ItemUseOutOfBattle_Repel(u8 taskId)
 {
     if (VarGet(VAR_REPEL_STEP_COUNT) == 0)
         gTasks[taskId].func = Task_StartUseRepel;
-    else if (!InBattlePyramid())
+    else if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
         DisplayItemMessage(taskId, FONT_NORMAL, gText_RepelEffectsLingered, CloseItemMessage);
     else
         DisplayItemMessageInBattlePyramid(taskId, gText_RepelEffectsLingered, Task_CloseBattlePyramidBagMessage);
@@ -866,7 +866,7 @@ static void Task_UseRepel(u8 taskId)
     {
         VarSet(VAR_REPEL_STEP_COUNT, ItemId_GetHoldEffectParam(gSpecialVar_ItemId));
         RemoveUsedItem();
-        if (!InBattlePyramid())
+        if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
             DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, CloseItemMessage);
         else
             DisplayItemMessageInBattlePyramid(taskId, gStringVar4, Task_CloseBattlePyramidBagMessage);
@@ -878,7 +878,7 @@ static void Task_UsedBlackWhiteFlute(u8 taskId)
     if(++gTasks[taskId].data[8] > 7)
     {
         PlaySE(SE_GLASS_FLUTE);
-        if (!InBattlePyramid())
+        if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
             DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, CloseItemMessage);
         else
             DisplayItemMessageInBattlePyramid(taskId, gStringVar4, Task_CloseBattlePyramidBagMessage);
@@ -951,12 +951,12 @@ void ItemUseInBattle_PokeBall(u8 taskId)
     if (IsPlayerPartyAndPokemonStorageFull() == FALSE) // have room for mon?
     {
         RemoveBagItem(gSpecialVar_ItemId, 1);
-        if (!InBattlePyramid())
+        if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
             Task_FadeAndCloseBagMenu(taskId);
         else
             CloseBattlePyramidBag(taskId);
     }
-    else if (!InBattlePyramid())
+    else if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
     {
         DisplayItemMessage(taskId, FONT_NORMAL, gText_BoxFull, CloseItemMessage);
     }
@@ -970,7 +970,7 @@ static void Task_CloseStatIncreaseMessage(u8 taskId)
 {
     if (JOY_NEW(A_BUTTON | B_BUTTON))
     {
-        if (!InBattlePyramid())
+        if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
             Task_FadeAndCloseBagMenu(taskId);
         else
             CloseBattlePyramidBag(taskId);
@@ -983,7 +983,7 @@ static void Task_UseStatIncreaseItem(u8 taskId)
     {
         PlaySE(SE_USE_ITEM);
         RemoveBagItem(gSpecialVar_ItemId, 1);
-        if (!InBattlePyramid())
+        if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
             DisplayItemMessage(taskId, FONT_NORMAL, UseStatIncreaseItem(gSpecialVar_ItemId), Task_CloseStatIncreaseMessage);
         else
             DisplayItemMessageInBattlePyramid(taskId, UseStatIncreaseItem(gSpecialVar_ItemId), Task_CloseStatIncreaseMessage);
@@ -997,7 +997,7 @@ void ItemUseInBattle_StatIncrease(u8 taskId)
 
     if (ExecuteTableBasedItemEffect(&gPlayerParty[partyId], gSpecialVar_ItemId, partyId, 0) != FALSE)
     {
-        if (!InBattlePyramid())
+        if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
             DisplayItemMessage(taskId, FONT_NORMAL, gText_WontHaveEffect, CloseItemMessage);
         else
             DisplayItemMessageInBattlePyramid(taskId, gText_WontHaveEffect, Task_CloseBattlePyramidBagMessage);
@@ -1011,7 +1011,7 @@ void ItemUseInBattle_StatIncrease(u8 taskId)
 
 static void ItemUseInBattle_ShowPartyMenu(u8 taskId)
 {
-    if (!InBattlePyramid())
+    if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
     {
         gBagMenu->newScreenCallback = ChooseMonForInBattleItem;
         Task_FadeAndCloseBagMenu(taskId);
@@ -1049,7 +1049,7 @@ void ItemUseInBattle_Escape(u8 taskId)
     if((gBattleTypeFlags & BATTLE_TYPE_TRAINER) == FALSE)
     {
         RemoveUsedItem();
-        if (!InBattlePyramid())
+        if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
             DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_FadeAndCloseBagMenu);
         else
             DisplayItemMessageInBattlePyramid(taskId, gStringVar4, CloseBattlePyramidBag);

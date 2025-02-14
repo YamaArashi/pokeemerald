@@ -1,13 +1,15 @@
 #ifndef GUARD_BATTLE_PYRAMID_H
 #define GUARD_BATTLE_PYRAMID_H
 
+#include "constants/battle_pyramid.h"
+
 void CallBattlePyramidFunction(void);
 u16 LocalIdToPyramidTrainerId(u8 localId);
 bool8 GetBattlePyramidTrainerFlag(u8 eventId);
 void MarkApproachingPyramidTrainersAsBattled(void);
 void GenerateBattlePyramidWildMon(void);
 u8 GetPyramidRunMultiplier(void);
-u8 InBattlePyramid(void);
+u8 CurrentBattlePyramidLocation(void);
 bool8 InBattlePyramid_(void);
 void PausePyramidChallenge(void);
 void SoftResetInBattlePyramid(void);
