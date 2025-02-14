@@ -1,3 +1,4 @@
 # Will be moved to build/ eventually
 map_groups.h
 layouts.h
+wild_encounter.h

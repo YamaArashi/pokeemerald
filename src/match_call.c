@@ -1697,45 +1697,51 @@ static void PopulateMapName(int matchCallId, u8 *destStr)
     GetMapName(destStr, GetRematchTrainerLocation(matchCallId), 0);
 }
 
+// Equivalent to ChooseWildMonIndex_Land
+// NUM_LAND_ENCOUNTER_SLOTS
 static u8 GetLandEncounterSlot(void)
 {
-    int rand = Random() % 100;
-    if (rand < 20)
+    int rand = Random() % ENCOUNTER_CHANCE_LAND_TOTAL;
+
+    if (rand < ENCOUNTER_CHANCE_LAND_SLOT_0)
         return 0;
-    else if (rand >= 20 && rand < 40)
+    else if (rand >= ENCOUNTER_CHANCE_LAND_SLOT_0 && rand < ENCOUNTER_CHANCE_LAND_SLOT_1)
         return 1;
-    else if (rand >= 40 && rand < 50)
+    else if (rand >= ENCOUNTER_CHANCE_LAND_SLOT_1 && rand < ENCOUNTER_CHANCE_LAND_SLOT_2)
         return 2;
-    else if (rand >= 50 && rand < 60)
+    else if (rand >= ENCOUNTER_CHANCE_LAND_SLOT_2 && rand < ENCOUNTER_CHANCE_LAND_SLOT_3)
         return 3;
-    else if (rand >= 60 && rand < 70)
+    else if (rand >= ENCOUNTER_CHANCE_LAND_SLOT_3 && rand < ENCOUNTER_CHANCE_LAND_SLOT_4)
         return 4;
-    else if (rand >= 70 && rand < 80)
+    else if (rand >= ENCOUNTER_CHANCE_LAND_SLOT_4 && rand < ENCOUNTER_CHANCE_LAND_SLOT_5)
         return 5;
-    else if (rand >= 80 && rand < 85)
+    else if (rand >= ENCOUNTER_CHANCE_LAND_SLOT_5 && rand < ENCOUNTER_CHANCE_LAND_SLOT_6)
         return 6;
-    else if (rand >= 85 && rand < 90)
+    else if (rand >= ENCOUNTER_CHANCE_LAND_SLOT_6 && rand < ENCOUNTER_CHANCE_LAND_SLOT_7)
         return 7;
-    else if (rand >= 90 && rand < 94)
+    else if (rand >= ENCOUNTER_CHANCE_LAND_SLOT_7 && rand < ENCOUNTER_CHANCE_LAND_SLOT_8)
         return 8;
-    else if (rand >= 94 && rand < 98)
+    else if (rand >= ENCOUNTER_CHANCE_LAND_SLOT_8 && rand < ENCOUNTER_CHANCE_LAND_SLOT_9)
         return 9;
-    else if (rand >= 98 && rand < 99)
+    else if (rand >= ENCOUNTER_CHANCE_LAND_SLOT_9 && rand < ENCOUNTER_CHANCE_LAND_SLOT_10)
         return 10;
     else
         return 11;
 }
 
+// Equivalent to ChooseWildMonIndex_WaterRock
+// NUM_WATER_ENCOUNTER_SLOTS
 static u8 GetWaterEncounterSlot(void)
 {
-    int rand = Random() % 100;
-    if (rand < 60)
+    int rand = Random() % ENCOUNTER_CHANCE_WATER_TOTAL;
+
+    if (rand < ENCOUNTER_CHANCE_WATER_SLOT_0)
         return 0;
-    else if (rand >= 60 && rand < 90)
+    else if (rand >= ENCOUNTER_CHANCE_WATER_SLOT_0 && rand < ENCOUNTER_CHANCE_WATER_SLOT_1)
         return 1;
-    else if (rand >= 90 && rand < 95)
+    else if (rand >= ENCOUNTER_CHANCE_WATER_SLOT_1 && rand < ENCOUNTER_CHANCE_WATER_SLOT_2)
         return 2;
-    else if (rand >= 95 && rand < 99)
+    else if (rand >= ENCOUNTER_CHANCE_WATER_SLOT_2 && rand < ENCOUNTER_CHANCE_WATER_SLOT_3)
         return 3;
     else
         return 4;

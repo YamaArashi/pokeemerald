@@ -385,19 +385,19 @@ static bool8 MapHasSpecies(const struct WildPokemonHeader *info, u16 species)
             return FALSE;
     }
 
-    if (MonListHasSpecies(info->landMonsInfo, species, LAND_WILD_COUNT))
+    if (MonListHasSpecies(info->landMonsInfo, species, NUM_LAND_ENCOUNTER_SLOTS))
         return TRUE;
-    if (MonListHasSpecies(info->waterMonsInfo, species, WATER_WILD_COUNT))
+    if (MonListHasSpecies(info->waterMonsInfo, species, NUM_WATER_ENCOUNTER_SLOTS))
         return TRUE;
 // When searching the fishing encounters, this incorrectly uses the size of the land encounters.
 // As a result it's reading out of bounds of the fishing encounters tables.
 #ifdef BUGFIX
-    if (MonListHasSpecies(info->fishingMonsInfo, species, FISH_WILD_COUNT))
+    if (MonListHasSpecies(info->fishingMonsInfo, species, NUM_FISHING_ENCOUNTER_SLOTS))
 #else
-    if (MonListHasSpecies(info->fishingMonsInfo, species, LAND_WILD_COUNT))
+    if (MonListHasSpecies(info->fishingMonsInfo, species, NUM_LAND_ENCOUNTER_SLOTS))
 #endif
         return TRUE;
-    if (MonListHasSpecies(info->rockSmashMonsInfo, species, ROCK_WILD_COUNT))
+    if (MonListHasSpecies(info->rockSmashMonsInfo, species, NUM_ROCK_SMASH_ENCOUNTER_SLOTS))
         return TRUE;
     return FALSE;
 }
