@@ -1221,7 +1221,18 @@ static void Cmd_ppreduce(void)
             ppToDeduct += AbilityBattleEffects(ABILITYEFFECT_COUNT_OTHER_SIDE, gBattlerAttacker, ABILITY_PRESSURE, 0, 0);
             break;
         default:
+#ifdef BUGFIX
+            //There is an issue with asymmetrical interaction between non-ghost curse and pressure,
+            //since the player controller changes the target of non-ghost curse to the user,
+            //but the opponent controller doesn't, so the player's non-ghost curse loses 1 PP
+            //against and opponent with pressure, but an opponent's non-ghost curse loses 2 PP
+            //against a player with pressure.
+            //This bugfix ensures that non-ghost curse always only deducts 1 PP against pressure,
+            //regardless of used by the player or opponent.
+            if (gBattlerAttacker != gBattlerTarget && gBattleMons[gBattlerTarget].ability == ABILITY_PRESSURE && !(gBattleMoves[gCurrentMove].effect == EFFECT_CURSE && gBattleMons[gBattlerAttacker].type1 != TYPE_GHOST && gBattleMons[gBattlerAttacker].type2 != TYPE_GHOST))
+#else
             if (gBattlerAttacker != gBattlerTarget && gBattleMons[gBattlerTarget].ability == ABILITY_PRESSURE)
+#endif
                 ppToDeduct++;
             break;
         }
