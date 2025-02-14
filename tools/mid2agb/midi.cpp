@@ -233,10 +233,10 @@ void MakeBlockEvent(Event& event, EventType type)
 
 std::string ReadEventText()
 {
-    char buffer[2];
+    char buffer[9];
     std::uint32_t length = ReadVLQ();
 
-    if (length <= 2)
+    if (length <= 9)
     {
         if (fread(buffer, length, 1, g_inputFile) != 1)
             RaiseError("failed to read event text");
@@ -284,11 +284,11 @@ bool ReadSeqEvent(Event& event)
         // text event
         std::string text = ReadEventText();
 
-        if (text == "[")
+        if (text == "[" || text == "loopStart")
             MakeBlockEvent(event, EventType::LoopBegin);
         else if (text == "][")
             MakeBlockEvent(event, EventType::LoopEndBegin);
-        else if (text == "]")
+        else if (text == "]" || text == "loopEnd")
             MakeBlockEvent(event, EventType::LoopEnd);
         else if (text == ":")
             MakeBlockEvent(event, EventType::Label);
