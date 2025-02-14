@@ -652,8 +652,8 @@ static void CB2_EggHatch(void)
     case 5:
         // "{mon} hatched from egg" message/fanfare
         GetMonNickname2(&gPlayerParty[sEggHatchData->eggPartyId], gStringVar1);
-        StringExpandPlaceholders(gStringVar4, gText_HatchedFromEgg);
-        EggHatchPrintMessage(sEggHatchData->windowId, gStringVar4, 0, 3, TEXT_SKIP_DRAW);
+        StringExpandPlaceholders(gStringVarBuffer, gText_HatchedFromEgg);
+        EggHatchPrintMessage(sEggHatchData->windowId, gStringVarBuffer, 0, 3, TEXT_SKIP_DRAW);
         PlayFanfare(MUS_EVOLVED);
         sEggHatchData->state++;
         PutWindowTilemap(sEggHatchData->windowId);
@@ -670,8 +670,8 @@ static void CB2_EggHatch(void)
     case 8:
         // Ready the nickname prompt
         GetMonNickname2(&gPlayerParty[sEggHatchData->eggPartyId], gStringVar1);
-        StringExpandPlaceholders(gStringVar4, gText_NicknameHatchPrompt);
-        EggHatchPrintMessage(sEggHatchData->windowId, gStringVar4, 0, 2, 1);
+        StringExpandPlaceholders(gStringVarBuffer, gText_NicknameHatchPrompt);
+        EggHatchPrintMessage(sEggHatchData->windowId, gStringVarBuffer, 0, 2, 1);
         sEggHatchData->state++;
         break;
     case 9:

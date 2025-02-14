@@ -81,7 +81,7 @@ bool8 ShowPokenavFieldMessage(const u8 *str)
 {
     if (sFieldMessageBoxMode != FIELD_MESSAGE_BOX_HIDDEN)
         return FALSE;
-    StringExpandPlaceholders(gStringVar4, str);
+    StringExpandPlaceholders(gStringVarBuffer, str);
     CreateTask(Task_HidePokenavMessageWhenDone, 0);
     StartMatchCallFromScript(str);
     sFieldMessageBoxMode = FIELD_MESSAGE_BOX_NORMAL;
@@ -105,7 +105,7 @@ static bool8 UNUSED ForceShowFieldAutoScrollMessage(const u8 *str)
 }
 
 // Same as ShowFieldMessage, but instead of accepting a
-// string arg it just prints whats already in gStringVar4
+// string arg it just prints whats already in gStringVarBuffer
 bool8 ShowFieldMessageFromBuffer(void)
 {
     if (sFieldMessageBoxMode != FIELD_MESSAGE_BOX_HIDDEN)
@@ -117,7 +117,7 @@ bool8 ShowFieldMessageFromBuffer(void)
 
 static void ExpandStringAndStartDrawFieldMessage(const u8 *str, bool32 allowSkippingDelayWithButtonPress)
 {
-    StringExpandPlaceholders(gStringVar4, str);
+    StringExpandPlaceholders(gStringVarBuffer, str);
     AddTextPrinterForMessage(allowSkippingDelayWithButtonPress);
     CreateTask_DrawFieldMessage();
 }

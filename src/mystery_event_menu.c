@@ -198,8 +198,8 @@ static void CB2_MysteryEventMenu(void)
         }
         else
         {
-            GetEventLoadMessage(gStringVar4, MEVENT_STATUS_LOAD_ERROR);
-            PrintMysteryMenuText(WIN_MSG, gStringVar4, 1, 2, 1);
+            GetEventLoadMessage(gStringVarBuffer, MEVENT_STATUS_LOAD_ERROR);
+            PrintMysteryMenuText(WIN_MSG, gStringVarBuffer, 1, 2, 1);
             gMain.state = 13;
         }
         break;
@@ -211,8 +211,8 @@ static void CB2_MysteryEventMenu(void)
                 if (GetLinkPlayerDataExchangeStatusTimed(2, 2) == EXCHANGE_DIFF_SELECTIONS)
                 {
                     SetCloseLinkCallback();
-                    GetEventLoadMessage(gStringVar4, MEVENT_STATUS_LOAD_ERROR);
-                    PrintMysteryMenuText(WIN_MSG, gStringVar4, 1, 2, 1);
+                    GetEventLoadMessage(gStringVarBuffer, MEVENT_STATUS_LOAD_ERROR);
+                    PrintMysteryMenuText(WIN_MSG, gStringVarBuffer, 1, 2, 1);
                     gMain.state = 13;
                 }
                 else if (CheckLanguageMatch())
@@ -223,8 +223,8 @@ static void CB2_MysteryEventMenu(void)
                 else
                 {
                     CloseLink();
-                    GetEventLoadMessage(gStringVar4, MEVENT_STATUS_LOAD_ERROR);
-                    PrintMysteryMenuText(WIN_MSG, gStringVar4, 1, 2, 1);
+                    GetEventLoadMessage(gStringVarBuffer, MEVENT_STATUS_LOAD_ERROR);
+                    PrintMysteryMenuText(WIN_MSG, gStringVarBuffer, 1, 2, 1);
                     gMain.state = 13;
                 }
             }
@@ -259,13 +259,13 @@ static void CB2_MysteryEventMenu(void)
         {
             u16 status = RunMysteryEventScript(gDecompressionBuffer);
             CpuFill32(0, gDecompressionBuffer, 0x7D4);
-            if (!GetEventLoadMessage(gStringVar4, status))
+            if (!GetEventLoadMessage(gStringVarBuffer, status))
                 TrySavingData(SAVE_NORMAL);
             gMain.state++;
         }
         break;
     case 12:
-        PrintMysteryMenuText(WIN_MSG, gStringVar4, 1, 2, 1);
+        PrintMysteryMenuText(WIN_MSG, gStringVarBuffer, 1, 2, 1);
         gMain.state++;
         break;
     case 13:
@@ -295,8 +295,8 @@ static void CB2_MysteryEventMenu(void)
     if (gLinkStatus & LINK_STAT_CONN_ESTABLISHED && !IsLinkMaster())
     {
         CloseLink();
-        GetEventLoadMessage(gStringVar4, MEVENT_STATUS_LOAD_ERROR);
-        PrintMysteryMenuText(WIN_MSG, gStringVar4, 1, 2, 1);
+        GetEventLoadMessage(gStringVarBuffer, MEVENT_STATUS_LOAD_ERROR);
+        PrintMysteryMenuText(WIN_MSG, gStringVarBuffer, 1, 2, 1);
         gMain.state = 13;
     }
 

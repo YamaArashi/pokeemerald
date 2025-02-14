@@ -467,8 +467,8 @@ static void CB2_MoveRelearnerMain(void)
 
 static void PrintMessageWithPlaceholders(const u8 *src)
 {
-    StringExpandPlaceholders(gStringVar4, src);
-    MoveRelearnerPrintMessage(gStringVar4);
+    StringExpandPlaceholders(gStringVarBuffer, src);
+    MoveRelearnerPrintMessage(gStringVarBuffer);
 }
 
 // See the state machine doc at the top of the file.
@@ -769,9 +769,9 @@ static void HideHeartSpritesAndShowTeachMoveText(bool8 onlyHideSprites)
 
     if (!onlyHideSprites)
     {
-        StringExpandPlaceholders(gStringVar4, gText_TeachWhichMoveToPkmn);
+        StringExpandPlaceholders(gStringVarBuffer, gText_TeachWhichMoveToPkmn);
         FillWindowPixelBuffer(RELEARNERWIN_MSG, 0x11);
-        AddTextPrinterParameterized(RELEARNERWIN_MSG, FONT_NORMAL, gStringVar4, 0, 1, 0, NULL);
+        AddTextPrinterParameterized(RELEARNERWIN_MSG, FONT_NORMAL, gStringVarBuffer, 0, 1, 0, NULL);
     }
 }
 
@@ -808,16 +808,16 @@ static void HandleInput(bool8 showContest)
         PlaySE(SE_SELECT);
         RemoveScrollArrows();
         sMoveRelearnerStruct->state = MENU_STATE_PRINT_GIVE_UP_PROMPT;
-        StringExpandPlaceholders(gStringVar4, gText_MoveRelearnerGiveUp);
-        MoveRelearnerPrintMessage(gStringVar4);
+        StringExpandPlaceholders(gStringVarBuffer, gText_MoveRelearnerGiveUp);
+        MoveRelearnerPrintMessage(gStringVarBuffer);
         break;
     default:
         PlaySE(SE_SELECT);
         RemoveScrollArrows();
         sMoveRelearnerStruct->state = MENU_STATE_PRINT_TEACH_MOVE_PROMPT;
         StringCopy(gStringVar2, gMoveNames[itemId]);
-        StringExpandPlaceholders(gStringVar4, gText_MoveRelearnerTeachMoveConfirm);
-        MoveRelearnerPrintMessage(gStringVar4);
+        StringExpandPlaceholders(gStringVarBuffer, gText_MoveRelearnerTeachMoveConfirm);
+        MoveRelearnerPrintMessage(gStringVarBuffer);
         break;
     }
 }
@@ -837,9 +837,9 @@ static void ShowTeachMoveText(bool8 shouldDoNothingInstead)
 {
     if (shouldDoNothingInstead == FALSE)
     {
-        StringExpandPlaceholders(gStringVar4, gText_TeachWhichMoveToPkmn);
+        StringExpandPlaceholders(gStringVarBuffer, gText_TeachWhichMoveToPkmn);
         FillWindowPixelBuffer(RELEARNERWIN_MSG, 0x11);
-        AddTextPrinterParameterized(RELEARNERWIN_MSG, FONT_NORMAL, gStringVar4, 0, 1, 0, NULL);
+        AddTextPrinterParameterized(RELEARNERWIN_MSG, FONT_NORMAL, gStringVarBuffer, 0, 1, 0, NULL);
     }
 }
 

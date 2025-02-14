@@ -82,7 +82,7 @@ BattleFrontier_BattleFactoryBattleRoom_EventScript_BattleOpponent::
 	goto_if_ne VAR_TEMP_F, FRONTIER_BRAIN_NOT_READY, BattleFrontier_BattleFactoryBattleRoom_EventScript_BattleNoland
 	palace_getopponentintro
 	lockall
-	msgbox gStringVar4, MSGBOX_DEFAULT
+	msgbox gStringVarBuffer, MSGBOX_DEFAULT
 	waitmessage
 	closemessage
 	frontier_set FRONTIER_DATA_RECORD_DISABLED, FALSE

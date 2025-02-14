@@ -544,9 +544,9 @@ static void ClearScreenInBg0(bool32 ignoreTopTwoRows)
 
 void MG_AddMessageTextPrinter(const u8 *str)
 {
-    StringExpandPlaceholders(gStringVar4, str);
+    StringExpandPlaceholders(gStringVarBuffer, str);
     FillWindowPixelBuffer(WIN_MSG, 0x11);
-    AddTextPrinterParameterized4(WIN_MSG, FONT_NORMAL, 0, 1, 0, 0, sMG_Ereader_TextColor_2, 0, gStringVar4);
+    AddTextPrinterParameterized4(WIN_MSG, FONT_NORMAL, 0, 1, 0, 0, sMG_Ereader_TextColor_2, 0, gStringVarBuffer);
     DrawTextBorderOuter(WIN_MSG, 0x001, 0xF);
     PutWindowTilemap(WIN_MSG);
     CopyWindowToVram(WIN_MSG, COPYWIN_FULL);
@@ -671,13 +671,13 @@ s8 DoMysteryGiftYesNo(u8 * textState, u16 * windowId, bool8 yesNoBoxPlacement, c
     {
     case 0:
         // Print question message
-        StringExpandPlaceholders(gStringVar4, str);
+        StringExpandPlaceholders(gStringVarBuffer, str);
         if (yesNoBoxPlacement == 0)
             *windowId = AddWindow(&sWindowTemplate_YesNoMsg_Wide);
         else
             *windowId = AddWindow(&sWindowTemplate_YesNoMsg);
         FillWindowPixelBuffer(*windowId, 0x11);
-        AddTextPrinterParameterized4(*windowId, FONT_NORMAL, 0, 1, 0, 0, sMG_Ereader_TextColor_2, 0, gStringVar4);
+        AddTextPrinterParameterized4(*windowId, FONT_NORMAL, 0, 1, 0, 0, sMG_Ereader_TextColor_2, 0, gStringVarBuffer);
         DrawTextBorderOuter(*windowId, 0x001, 0x0F);
         CopyWindowToVram(*windowId, COPYWIN_GFX);
         PutWindowTilemap(*windowId);
@@ -729,12 +729,12 @@ static s32 HandleGiftSelectMenu(u8 * textState, u16 * windowId, bool32 cannotTos
     case 0:
         // Print menu message
         if (!cannotToss)
-            StringExpandPlaceholders(gStringVar4, gText_WhatToDoWithCards);
+            StringExpandPlaceholders(gStringVarBuffer, gText_WhatToDoWithCards);
         else
-            StringExpandPlaceholders(gStringVar4, gText_WhatToDoWithNews);
+            StringExpandPlaceholders(gStringVarBuffer, gText_WhatToDoWithNews);
         *windowId = AddWindow(&sWindowTemplate_GiftSelect);
         FillWindowPixelBuffer(*windowId, 0x11);
-        AddTextPrinterParameterized4(*windowId, FONT_NORMAL, 0, 1, 0, 0, sMG_Ereader_TextColor_2, 0, gStringVar4);
+        AddTextPrinterParameterized4(*windowId, FONT_NORMAL, 0, 1, 0, 0, sMG_Ereader_TextColor_2, 0, gStringVarBuffer);
         DrawTextBorderOuter(*windowId, 0x001, 0x0F);
         CopyWindowToVram(*windowId, COPYWIN_GFX);
         PutWindowTilemap(*windowId);

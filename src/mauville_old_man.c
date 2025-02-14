@@ -169,7 +169,7 @@ void SaveBardSongLyrics(void)
     bard->hasChangedSong = TRUE;
 }
 
-// Copies lyrics into gStringVar4.
+// Copies lyrics into gStringVarBuffer.
 // gSpecialVar_0x8004 is used in these functions to indicate which song should be played.
 // If it's set to 0 the Bard's current song should be played, otherwise the new user-provided song should be played.
 // Its set in the scripts right before 'PlayBardSong' is called.
@@ -177,7 +177,7 @@ static void PrepareSongText(void)
 {
     struct MauvilleManBard *bard = &gSaveBlock1Ptr->oldMan.bard;
     u16 * lyrics = !gSpecialVar_0x8004 ? bard->songLyrics : bard->newSongLyrics;
-    u8 * wordEnd = gStringVar4;
+    u8 * wordEnd = gStringVarBuffer;
     u8 * str = wordEnd;
     u16 paragraphNum;
 
@@ -295,14 +295,14 @@ void GenerateGiddyLine(void)
         u32 adjective = Random();
         adjective %= ARRAY_COUNT(sGiddyAdjectives);
 
-        stringPtr = CopyEasyChatWord(gStringVar4, giddy->randomWords[giddy->taleCounter]);
+        stringPtr = CopyEasyChatWord(gStringVarBuffer, giddy->randomWords[giddy->taleCounter]);
         stringPtr = StringCopy(stringPtr, GiddyText_Is);
         stringPtr = StringCopy(stringPtr, sGiddyAdjectives[adjective]);
         StringCopy(stringPtr, GiddyText_DontYouAgree);
     }
     else
     {
-        StringCopy(gStringVar4, sGiddyQuestions[giddy->questionList[giddy->questionNum++]]);
+        StringCopy(gStringVarBuffer, sGiddyQuestions[giddy->questionList[giddy->questionNum++]]);
     }
 
     // 10% chance for Giddy to stop telling tales.
@@ -611,7 +611,7 @@ static void Task_BardSong(u8 taskId)
     {
     case BARD_STATE_INIT:
         PrepareSongText();
-        DrawSongTextWindow(gStringVar4);
+        DrawSongTextWindow(gStringVarBuffer);
         task->tWordState = 0;
         task->tDelay = 0;
         task->tCharIndex = 0;
@@ -626,7 +626,7 @@ static void Task_BardSong(u8 taskId)
     case BARD_STATE_GET_WORD:
     {
         struct MauvilleManBard *bard = &gSaveBlock1Ptr->oldMan.bard;
-        u8 *str = &gStringVar4[task->tCharIndex];
+        u8 *str = &gStringVarBuffer[task->tCharIndex];
         u16 wordLen = 0;
 
         // Read letters until delimiter
@@ -671,7 +671,7 @@ static void Task_BardSong(u8 taskId)
             task->tDelay--;
         break;
     case BARD_STATE_HANDLE_WORD:
-        if (gStringVar4[task->tCharIndex] == EOS)
+        if (gStringVarBuffer[task->tCharIndex] == EOS)
         {
             // End song
             FadeInBGM(6);
@@ -679,7 +679,7 @@ static void Task_BardSong(u8 taskId)
             ScriptContext_Enable();
             DestroyTask(taskId);
         }
-        else if (gStringVar4[task->tCharIndex] == CHAR_SPACE)
+        else if (gStringVarBuffer[task->tCharIndex] == CHAR_SPACE)
         {
             // End of easy chat word, move on to the next one.
             EnableTextPrinters();
@@ -687,14 +687,14 @@ static void Task_BardSong(u8 taskId)
             task->tState = BARD_STATE_GET_WORD;
             task->tDelay = 0;
         }
-        else if (gStringVar4[task->tCharIndex] == CHAR_NEWLINE)
+        else if (gStringVarBuffer[task->tCharIndex] == CHAR_NEWLINE)
         {
             // Handle newline
             task->tCharIndex++;
             task->tState = BARD_STATE_GET_WORD;
             task->tDelay = 0;
         }
-        else if (gStringVar4[task->tCharIndex] == EXT_CTRL_CODE_BEGIN)
+        else if (gStringVarBuffer[task->tCharIndex] == EXT_CTRL_CODE_BEGIN)
         {
             // Handle ctrl code
             // The only expected ctrl codes are those for clearing the end of the paragraph,
@@ -703,10 +703,10 @@ static void Task_BardSong(u8 taskId)
             task->tState = BARD_STATE_GET_WORD;
             task->tDelay = 8;
         }
-        else if (gStringVar4[task->tCharIndex] == CHAR_BARD_WORD_DELIMIT)
+        else if (gStringVarBuffer[task->tCharIndex] == CHAR_BARD_WORD_DELIMIT)
         {
             // Space within the current easy chat word (see PrepareSongText), just replace it with a real space.
-            gStringVar4[task->tCharIndex] = CHAR_SPACE;
+            gStringVarBuffer[task->tCharIndex] = CHAR_SPACE;
             EnableTextPrinters();
             task->tCharIndex++;
             task->tDelay = 0;

@@ -129,7 +129,7 @@ void BufferApprenticeChallengeText(u8 saveApprenticeId)
     ConvertInternationalString(gStringVar1, gSaveBlock2Ptr->apprentices[saveApprenticeId].language);
     ConvertIntToDecimalStringN(gStringVar2, gSaveBlock2Ptr->apprentices[saveApprenticeId].number, STR_CONV_MODE_RIGHT_ALIGN, i);
     challengeText = sApprenticeChallengeTexts[gSaveBlock2Ptr->apprentices[saveApprenticeId].id];
-    StringExpandPlaceholders(gStringVar4, challengeText);
+    StringExpandPlaceholders(gStringVarBuffer, challengeText);
 }
 
 void Apprentice_ScriptContext_Enable(void)
@@ -902,7 +902,7 @@ static void PrintApprenticeMessage(void)
         return;
     }
 
-    StringExpandPlaceholders(gStringVar4, string);
+    StringExpandPlaceholders(gStringVarBuffer, string);
     AddTextPrinterForMessage(TRUE);
     CreateTask(Task_WaitForPrintingMessage, 1);
 }
@@ -1082,7 +1082,7 @@ static void ApprenticeBufferString(void)
         break;
     case APPRENTICE_BUFF_WIN_SPEECH:
         FrontierSpeechToString(gSaveBlock2Ptr->apprentices[0].speechWon);
-        StringCopy(stringDst, gStringVar4);
+        StringCopy(stringDst, gStringVarBuffer);
         break;
     case APPRENTICE_BUFF_LEAD_MON_SPECIES:
         speciesArrayId = APPRENTICE_SPECIES_ID(PLAYER_APPRENTICE.leadMonId);

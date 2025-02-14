@@ -738,8 +738,8 @@ static void Mailbox_PrintWhatToDoWithPlayerMailText(u8 taskId)
 {
     StringCopy(gStringVar1, gSaveBlock1Ptr->mail[gPlayerPCItemPageInfo.itemsAbove + PARTY_SIZE + gPlayerPCItemPageInfo.cursorPos].playerName);
     ConvertInternationalPlayerNameStripChar(gStringVar1, CHAR_SPACE);
-    StringExpandPlaceholders(gStringVar4, gText_WhatToDoWithVar1sMail);
-    DisplayItemMessageOnField(taskId, gStringVar4, Mailbox_PrintMailOptions);
+    StringExpandPlaceholders(gStringVarBuffer, gText_WhatToDoWithVar1sMail);
+    DisplayItemMessageOnField(taskId, gStringVarBuffer, Mailbox_PrintMailOptions);
 }
 
 static void Mailbox_ReturnToPlayerPC(u8 taskId)
@@ -1039,8 +1039,8 @@ static void ItemStorage_PrintMenuItem(u8 windowId, u32 id, u8 yOffset)
                 ItemStorage_DrawSwapArrow(yOffset, 0xFF, TEXT_SKIP_DRAW);
         }
         ConvertIntToDecimalStringN(gStringVar1, gSaveBlock1Ptr->pcItems[id].quantity, STR_CONV_MODE_RIGHT_ALIGN, 3);
-        StringExpandPlaceholders(gStringVar4, gText_xVar1);
-        AddTextPrinterParameterized(windowId, FONT_NARROW, gStringVar4, GetStringRightAlignXOffset(FONT_NARROW, gStringVar4, 104), yOffset, TEXT_SKIP_DRAW, NULL);
+        StringExpandPlaceholders(gStringVarBuffer, gText_xVar1);
+        AddTextPrinterParameterized(windowId, FONT_NARROW, gStringVarBuffer, GetStringRightAlignXOffset(FONT_NARROW, gStringVarBuffer, 104), yOffset, TEXT_SKIP_DRAW, NULL);
     }
 }
 
@@ -1205,8 +1205,8 @@ static void ItemStorage_PrintMessage(const u8 *string)
 {
     u8 windowId = sItemStorageMenu->windowIds[ITEMPC_WIN_MESSAGE];
     FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
-    StringExpandPlaceholders(gStringVar4, string);
-    AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar4, 0, 1, 0, NULL);
+    StringExpandPlaceholders(gStringVarBuffer, string);
+    AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVarBuffer, 0, 1, 0, NULL);
 }
 
 // Process input while on the item storage's item list
@@ -1344,8 +1344,8 @@ static void ItemStorage_UpdateSwapLinePos(u8 y)
 static void ItemStorage_PrintItemQuantity(u8 windowId, u16 value, u32 mode, u8 x, u8 y, u8 n)
 {
     ConvertIntToDecimalStringN(gStringVar1, value, mode, n);
-    StringExpandPlaceholders(gStringVar4, gText_xVar1);
-    AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar4, GetStringCenterAlignXOffset(FONT_NORMAL, gStringVar4, 48), y, 0, NULL);
+    StringExpandPlaceholders(gStringVarBuffer, gText_xVar1);
+    AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVarBuffer, GetStringCenterAlignXOffset(FONT_NORMAL, gStringVarBuffer, 48), y, 0, NULL);
 }
 
 // Start an item Withdraw/Toss

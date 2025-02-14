@@ -51,7 +51,7 @@ static bool32 CheckCompatibility(u16 unk0, u32 unk1, u16 unk2, u32 version)
 
 static void SetIncompatible(void)
 {
-    StringExpandPlaceholders(gStringVar4, gText_MysteryEventCantBeUsed);
+    StringExpandPlaceholders(gStringVarBuffer, gText_MysteryEventCantBeUsed);
     SetMysteryEventScriptStatus(MEVENT_STATUS_FAILURE);
 }
 
@@ -213,7 +213,7 @@ bool8 MEScrCmd_setmsg(struct ScriptContext *ctx)
     u8 status = ScriptReadByte(ctx);
     u8 *str = (u8 *)(ScriptReadWord(ctx) - ctx->mOffset + ctx->mScriptBase);
     if (status == MEVENT_STATUS_FF || status == ctx->mStatus)
-        StringExpandPlaceholders(gStringVar4, str);
+        StringExpandPlaceholders(gStringVarBuffer, str);
     return FALSE;
 }
 
@@ -236,17 +236,17 @@ bool8 MEScrCmd_setenigmaberry(struct ScriptContext *ctx)
 
     if (!haveBerry)
     {
-        str = gStringVar4;
+        str = gStringVarBuffer;
         message = gText_MysteryEventBerry;
     }
     else if (StringCompare(gStringVar1, gStringVar2))
     {
-        str = gStringVar4;
+        str = gStringVarBuffer;
         message = gText_MysteryEventBerryTransform;
     }
     else
     {
-        str = gStringVar4;
+        str = gStringVarBuffer;
         message = gText_MysteryEventBerryObtained;
     }
 
@@ -267,7 +267,7 @@ bool8 MEScrCmd_giveribbon(struct ScriptContext *ctx)
     u8 index = ScriptReadByte(ctx);
     u8 ribbonId = ScriptReadByte(ctx);
     GiveGiftRibbonToParty(index, ribbonId);
-    StringExpandPlaceholders(gStringVar4, gText_MysteryEventSpecialRibbon);
+    StringExpandPlaceholders(gStringVarBuffer, gText_MysteryEventSpecialRibbon);
     ctx->mStatus = MEVENT_STATUS_SUCCESS;
     return FALSE;
 }
@@ -286,7 +286,7 @@ bool8 MEScrCmd_initramscript(struct ScriptContext *ctx)
 bool8 MEScrCmd_givenationaldex(struct ScriptContext *ctx)
 {
     EnableNationalPokedex();
-    StringExpandPlaceholders(gStringVar4, gText_MysteryEventNationalDex);
+    StringExpandPlaceholders(gStringVarBuffer, gText_MysteryEventNationalDex);
     ctx->mStatus = MEVENT_STATUS_SUCCESS;
     return FALSE;
 }
@@ -294,7 +294,7 @@ bool8 MEScrCmd_givenationaldex(struct ScriptContext *ctx)
 bool8 MEScrCmd_addrareword(struct ScriptContext *ctx)
 {
     UnlockTrendySaying(ScriptReadByte(ctx));
-    StringExpandPlaceholders(gStringVar4, gText_MysteryEventRareWord);
+    StringExpandPlaceholders(gStringVarBuffer, gText_MysteryEventRareWord);
     ctx->mStatus = MEVENT_STATUS_SUCCESS;
     return FALSE;
 }
@@ -328,7 +328,7 @@ bool8 MEScrCmd_givepokemon(struct ScriptContext *ctx)
 
     if (gPlayerPartyCount == PARTY_SIZE)
     {
-        StringExpandPlaceholders(gStringVar4, gText_MysteryEventFullParty);
+        StringExpandPlaceholders(gStringVarBuffer, gText_MysteryEventFullParty);
         ctx->mStatus = MEVENT_STATUS_FAILURE;
     }
     else
@@ -348,7 +348,7 @@ bool8 MEScrCmd_givepokemon(struct ScriptContext *ctx)
             GiveMailToMon(&gPlayerParty[PARTY_SIZE - 1], &mail);
         CompactPartySlots();
         CalculatePlayerPartyCount();
-        StringExpandPlaceholders(gStringVar4, gText_MysteryEventSentOver);
+        StringExpandPlaceholders(gStringVarBuffer, gText_MysteryEventSentOver);
         ctx->mStatus = MEVENT_STATUS_SUCCESS;
     }
 
@@ -360,7 +360,7 @@ bool8 MEScrCmd_addtrainer(struct ScriptContext *ctx)
     u32 data = ScriptReadWord(ctx) - ctx->mOffset + ctx->mScriptBase;
     memcpy(&gSaveBlock2Ptr->frontier.ereaderTrainer, (void *)data, sizeof(gSaveBlock2Ptr->frontier.ereaderTrainer));
     ValidateEReaderTrainer();
-    StringExpandPlaceholders(gStringVar4, gText_MysteryEventNewTrainer);
+    StringExpandPlaceholders(gStringVarBuffer, gText_MysteryEventNewTrainer);
     ctx->mStatus = MEVENT_STATUS_SUCCESS;
     return FALSE;
 }
@@ -368,7 +368,7 @@ bool8 MEScrCmd_addtrainer(struct ScriptContext *ctx)
 bool8 MEScrCmd_enableresetrtc(struct ScriptContext *ctx)
 {
     EnableResetRTC();
-    StringExpandPlaceholders(gStringVar4, gText_InGameClockUsable);
+    StringExpandPlaceholders(gStringVarBuffer, gText_InGameClockUsable);
     ctx->mStatus = MEVENT_STATUS_SUCCESS;
     return FALSE;
 }

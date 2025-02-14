@@ -3465,8 +3465,8 @@ static bool8 DoTradeAnim_Cable(void)
         }
         break;
     case STATE_SEND_MSG:
-        StringExpandPlaceholders(gStringVar4, gText_XWillBeSentToY);
-        DrawTextOnTradeWindow(0, gStringVar4, 0);
+        StringExpandPlaceholders(gStringVarBuffer, gText_XWillBeSentToY);
+        DrawTextOnTradeWindow(0, gStringVarBuffer, 0);
 
         if (sTradeAnim->monSpecies[TRADE_PLAYER] != SPECIES_EGG)
             PlayCry_Normal(sTradeAnim->monSpecies[TRADE_PLAYER], 0);
@@ -3479,8 +3479,8 @@ static bool8 DoTradeAnim_Cable(void)
         {
             sTradeAnim->releasePokeballSpriteId = CreateTradePokeballSprite(sTradeAnim->monSpriteIds[TRADE_PLAYER], gSprites[sTradeAnim->monSpriteIds[TRADE_PLAYER]].oam.paletteNum, 120, 32, 2, 1, 0x14, 0xfffff);
             sTradeAnim->state++;
-            StringExpandPlaceholders(gStringVar4, gText_ByeByeVar1);
-            DrawTextOnTradeWindow(0, gStringVar4, 0);
+            StringExpandPlaceholders(gStringVarBuffer, gText_ByeByeVar1);
+            DrawTextOnTradeWindow(0, gStringVarBuffer, 0);
         }
         break;
     case STATE_POKEBALL_DEPART:
@@ -3828,8 +3828,8 @@ static bool8 DoTradeAnim_Cable(void)
                                       DISPCNT_BG0_ON |
                                       DISPCNT_BG2_ON |
                                       DISPCNT_OBJ_ON);
-        StringExpandPlaceholders(gStringVar4, gText_XSentOverY);
-        DrawTextOnTradeWindow(0, gStringVar4, 0);
+        StringExpandPlaceholders(gStringVarBuffer, gText_XSentOverY);
+        DrawTextOnTradeWindow(0, gStringVarBuffer, 0);
         sTradeAnim->state = STATE_DELAY_FOR_MON_ANIM;
         sTradeAnim->timer = 0;
         break;
@@ -3851,8 +3851,8 @@ static bool8 DoTradeAnim_Cable(void)
         if (sTradeAnim->timer == 250)
         {
             sTradeAnim->state++;
-            StringExpandPlaceholders(gStringVar4, gText_TakeGoodCareOfX);
-            DrawTextOnTradeWindow(0, gStringVar4, 0);
+            StringExpandPlaceholders(gStringVarBuffer, gText_TakeGoodCareOfX);
+            DrawTextOnTradeWindow(0, gStringVarBuffer, 0);
             sTradeAnim->timer = 0;
         }
         break;
@@ -3936,8 +3936,8 @@ static bool8 DoTradeAnim_Wireless(void)
         }
         break;
     case STATE_SEND_MSG:
-        StringExpandPlaceholders(gStringVar4, gText_XWillBeSentToY);
-        DrawTextOnTradeWindow(0, gStringVar4, 0);
+        StringExpandPlaceholders(gStringVarBuffer, gText_XWillBeSentToY);
+        DrawTextOnTradeWindow(0, gStringVarBuffer, 0);
 
         if (sTradeAnim->monSpecies[TRADE_PLAYER] != SPECIES_EGG)
             PlayCry_Normal(sTradeAnim->monSpecies[TRADE_PLAYER], 0);
@@ -3950,8 +3950,8 @@ static bool8 DoTradeAnim_Wireless(void)
         {
             sTradeAnim->releasePokeballSpriteId = CreateTradePokeballSprite(sTradeAnim->monSpriteIds[TRADE_PLAYER], gSprites[sTradeAnim->monSpriteIds[TRADE_PLAYER]].oam.paletteNum, 120, 32, 2, 1, 0x14, 0xfffff);
             sTradeAnim->state++;
-            StringExpandPlaceholders(gStringVar4, gText_ByeByeVar1);
-            DrawTextOnTradeWindow(0, gStringVar4, 0);
+            StringExpandPlaceholders(gStringVarBuffer, gText_ByeByeVar1);
+            DrawTextOnTradeWindow(0, gStringVarBuffer, 0);
         }
         break;
     case STATE_POKEBALL_DEPART:
@@ -4325,8 +4325,8 @@ static bool8 DoTradeAnim_Wireless(void)
                                       DISPCNT_BG0_ON |
                                       DISPCNT_BG2_ON |
                                       DISPCNT_OBJ_ON);
-        StringExpandPlaceholders(gStringVar4, gText_XSentOverY);
-        DrawTextOnTradeWindow(0, gStringVar4, 0);
+        StringExpandPlaceholders(gStringVarBuffer, gText_XSentOverY);
+        DrawTextOnTradeWindow(0, gStringVarBuffer, 0);
         sTradeAnim->state = STATE_DELAY_FOR_MON_ANIM;
         sTradeAnim->timer = 0;
         break;
@@ -4348,8 +4348,8 @@ static bool8 DoTradeAnim_Wireless(void)
         if (sTradeAnim->timer == 250)
         {
             sTradeAnim->state++;
-            StringExpandPlaceholders(gStringVar4, gText_TakeGoodCareOfX);
-            DrawTextOnTradeWindow(0, gStringVar4, 0);
+            StringExpandPlaceholders(gStringVarBuffer, gText_TakeGoodCareOfX);
+            DrawTextOnTradeWindow(0, gStringVarBuffer, 0);
             sTradeAnim->timer = 0;
         }
         break;
@@ -4679,8 +4679,8 @@ static void CB2_SaveAndEndTrade(void)
     {
     case 0:
         gMain.state++;
-        StringExpandPlaceholders(gStringVar4, gText_CommunicationStandby5);
-        DrawTextOnTradeWindow(0, gStringVar4, 0);
+        StringExpandPlaceholders(gStringVarBuffer, gText_CommunicationStandby5);
+        DrawTextOnTradeWindow(0, gStringVarBuffer, 0);
         break;
     case 1:
         SetTradeLinkStandbyCallback(0);
@@ -4702,8 +4702,8 @@ static void CB2_SaveAndEndTrade(void)
         break;
     case 2:
         gMain.state = 50;
-        StringExpandPlaceholders(gStringVar4, gText_SavingDontTurnOffPower);
-        DrawTextOnTradeWindow(0, gStringVar4, 0);
+        StringExpandPlaceholders(gStringVarBuffer, gText_SavingDontTurnOffPower);
+        DrawTextOnTradeWindow(0, gStringVarBuffer, 0);
         break;
     case 50:
         if (!InUnionRoom())
@@ -4994,8 +4994,8 @@ static void CB2_SaveAndEndWirelessTrade(void)
     {
     case 0:
         gMain.state = 1;
-        StringExpandPlaceholders(gStringVar4, gText_CommunicationStandby5);
-        DrawTextOnTradeWindow(0, gStringVar4, 0);
+        StringExpandPlaceholders(gStringVarBuffer, gText_CommunicationStandby5);
+        DrawTextOnTradeWindow(0, gStringVarBuffer, 0);
         break;
     case 1:
         SetTradeLinkStandbyCallback(0);
@@ -5006,8 +5006,8 @@ static void CB2_SaveAndEndWirelessTrade(void)
         if (_IsLinkTaskFinished())
         {
             gMain.state = 3;
-            StringExpandPlaceholders(gStringVar4, gText_SavingDontTurnOffPower);
-            DrawTextOnTradeWindow(0, gStringVar4, 0);
+            StringExpandPlaceholders(gStringVarBuffer, gText_SavingDontTurnOffPower);
+            DrawTextOnTradeWindow(0, gStringVarBuffer, 0);
             IncrementGameStat(GAME_STAT_POKEMON_TRADES);
             LinkFullSave_Init();
             sTradeAnim->timer = 0;

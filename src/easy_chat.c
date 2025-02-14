@@ -5413,8 +5413,8 @@ void ShowEasyChatProfile(void)
         return;
     }
 
-    ConvertEasyChatWordsToString(gStringVar4, easyChatWords, columns, rows);
-    ShowFieldAutoScrollMessage(gStringVar4);
+    ConvertEasyChatWordsToString(gStringVarBuffer, easyChatWords, columns, rows);
+    ShowFieldAutoScrollMessage(gStringVarBuffer);
 }
 
 // The phrase that a man in Dewford Hall suggests has a "deep link" to the current trendy phrase
