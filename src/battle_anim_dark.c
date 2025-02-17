@@ -1,5 +1,6 @@
 #include "global.h"
 #include "battle_anim.h"
+#include "battle_anim_internal.h"
 #include "contest.h"
 #include "gpu_regs.h"
 #include "graphics.h"
@@ -189,8 +190,10 @@ const struct SpriteTemplate gClawSlashSpriteTemplate =
 
 void AnimTask_AttackerFadeToInvisible(u8 taskId)
 {
+    CMD_ARGS(stepDelay);
+
     int battler;
-    gTasks[taskId].data[0] = gBattleAnimArgs[0];
+    gTasks[taskId].data[0] = cmd->stepDelay;
     battler = gBattleAnimAttacker;
     gTasks[taskId].data[1] = 16;
     SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(16, 0));
@@ -227,7 +230,9 @@ static void AnimTask_AttackerFadeToInvisible_Step(u8 taskId)
 
 void AnimTask_AttackerFadeFromInvisible(u8 taskId)
 {
-    gTasks[taskId].data[0] = gBattleAnimArgs[0];
+    CMD_ARGS(stepDelay);
+
+    gTasks[taskId].data[0] = cmd->stepDelay;
     gTasks[taskId].data[1] = BLDALPHA_BLEND(0, 16);
     gTasks[taskId].func = AnimTask_AttackerFadeFromInvisible_Step;
     SetGpuReg(REG_OFFSET_BLDALPHA, gTasks[taskId].data[1]);
@@ -314,12 +319,14 @@ static void AnimUnusedBagSteal_Step(struct Sprite *sprite)
 // Move sprite inward for Bite/Crunch and Clamp
 static void AnimBite(struct Sprite *sprite)
 {
-    sprite->x += gBattleAnimArgs[0];
-    sprite->y += gBattleAnimArgs[1];
-    StartSpriteAffineAnim(sprite, gBattleAnimArgs[2]);
-    sprite->data[0] = gBattleAnimArgs[3];
-    sprite->data[1] = gBattleAnimArgs[4];
-    sprite->data[2] = gBattleAnimArgs[5];
+    CMD_ARGS(x, y, animation, xVelocity, yVelocity, halfDuration);
+
+    sprite->x += cmd->x;
+    sprite->y += cmd->y;
+    StartSpriteAffineAnim(sprite, cmd->animation);
+    sprite->data[0] = cmd->xVelocity;
+    sprite->data[1] = cmd->yVelocity;
+    sprite->data[2] = cmd->halfDuration;
     sprite->callback = AnimBite_Step1;
 }
 
@@ -346,10 +353,12 @@ static void AnimBite_Step2(struct Sprite *sprite)
 // Launches a tear drop away from the battler. Used by Fake Tears
 static void AnimTearDrop(struct Sprite *sprite)
 {
+    CMD_ARGS(relativeTo, type);
+
     u8 battler;
     s8 xOffset;
 
-    if (gBattleAnimArgs[0] == ANIM_ATTACKER)
+    if (cmd->relativeTo == ANIM_ATTACKER)
         battler = gBattleAnimAttacker;
     else
         battler = gBattleAnimTarget;
@@ -357,7 +366,7 @@ static void AnimTearDrop(struct Sprite *sprite)
     xOffset = 20;
     sprite->oam.tileNum += 4;
 
-    switch (gBattleAnimArgs[1])
+    switch (cmd->type)
     {
     case 0:
         sprite->x = GetBattlerSpriteCoordAttr(battler, BATTLER_COORD_ATTR_RIGHT) - 8;
@@ -798,21 +807,22 @@ void AnimTask_MementoHandleBg(u8 taskId)
 // Animates a deep slash from a claw. Used by Metal Claw, Dragon Claw, and Crush Claw
 static void AnimClawSlash(struct Sprite *sprite)
 {
-    sprite->x += gBattleAnimArgs[0];
-    sprite->y += gBattleAnimArgs[1];
-    StartSpriteAnim(sprite, gBattleAnimArgs[2]);
+    CMD_ARGS(x, y, animation);
+
+    sprite->x += cmd->x;
+    sprite->y += cmd->y;
+    StartSpriteAnim(sprite, cmd->animation);
     sprite->callback = RunStoredCallbackWhenAnimEnds;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
 // Makes the attacker metallic and shining.
 // Used by MOVE_HARDEN and MOVE_IRON_DEFENSE.
-// arg0: if true won't change battler's palette back
-// arg1: if true, use custom color
-// arg2: custom color
 // Custom color argument is used in MOVE_POISON_TAIL to make the mon turn purplish/pinkish as if became cloaked in poison.
 void AnimTask_MetallicShine(u8 taskId)
 {
+    CMD_ARGS(permanent, useColor, color);
+
     u16 species;
     u8 spriteId;
     u8 newSpriteId;
@@ -869,15 +879,15 @@ void AnimTask_MetallicShine(u8 taskId)
     gBattle_BG1_Y = -gSprites[spriteId].y + 32;
     paletteNum = 16 + gSprites[spriteId].oam.paletteNum;
 
-    if (gBattleAnimArgs[1] == 0)
+    if (cmd->useColor == 0)
         SetGrayscaleOrOriginalPalette(paletteNum, FALSE);
     else
-        BlendPalette(BG_PLTT_ID(paletteNum), 16, 11, gBattleAnimArgs[2]);
+        BlendPalette(BG_PLTT_ID(paletteNum), 16, 11, cmd->color);
 
     gTasks[taskId].data[0] = newSpriteId;
-    gTasks[taskId].data[1] = gBattleAnimArgs[0];
-    gTasks[taskId].data[2] = gBattleAnimArgs[1];
-    gTasks[taskId].data[3] = gBattleAnimArgs[2];
+    gTasks[taskId].data[1] = cmd->permanent;
+    gTasks[taskId].data[2] = cmd->useColor;
+    gTasks[taskId].data[3] = cmd->color;
     gTasks[taskId].data[6] = priorityChanged;
     gTasks[taskId].func = AnimTask_MetallicShine_Step;
 }
@@ -926,22 +936,22 @@ static void AnimTask_MetallicShine_Step(u8 taskId)
 }
 
 // Changes battler's palette to either grayscale or original.
-// arg0: which battler
-// arg1: FALSE grayscale, TRUE original
 void AnimTask_SetGrayscaleOrOriginalPal(u8 taskId)
 {
+    CMD_ARGS(battler, mode);
+
     u8 spriteId;
     u8 battler;
     bool8 calcSpriteId = FALSE;
     u8 position = B_POSITION_PLAYER_LEFT;
 
-    switch (gBattleAnimArgs[0])
+    switch (cmd->battler)
     {
     case ANIM_ATTACKER:
     case ANIM_TARGET:
     case ANIM_ATK_PARTNER:
     case ANIM_DEF_PARTNER:
-        spriteId = GetAnimBattlerSpriteId(gBattleAnimArgs[0]);
+        spriteId = GetAnimBattlerSpriteId(cmd->battler);
         break;
     case ANIM_PLAYER_LEFT:
         position = B_POSITION_PLAYER_LEFT;
@@ -974,7 +984,7 @@ void AnimTask_SetGrayscaleOrOriginalPal(u8 taskId)
     }
 
     if (spriteId != SPRITE_NONE)
-        SetGrayscaleOrOriginalPalette(gSprites[spriteId].oam.paletteNum + 16, gBattleAnimArgs[1]);
+        SetGrayscaleOrOriginalPalette(gSprites[spriteId].oam.paletteNum + 16, cmd->mode);
 
     DestroyAnimVisualTask(taskId);
 }

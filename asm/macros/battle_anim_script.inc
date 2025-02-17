@@ -10,7 +10,7 @@
 	.2byte \tag
 	.endm
 
-.macro createsprite template:req, anim_battler:req, subpriority_offset:req, argv:vararg
+	.macro createsprite template:req, anim_battler:req, subpriority_offset:req, argv:vararg
 	.byte 0x02
 	.4byte \template
 	.if \anim_battler == ANIM_TARGET
@@ -283,3 +283,201 @@
 	.macro jumpretfalse ptr:req
 	jumpreteq FALSE, \ptr
 	.endm
+
+@ createsprite wrappers
+@ The arguments are based on the CMD_ARGS of the callback associated with the template.
+
+	.macro simplepaletteblend unused_anim_battler=ANIM_ATTACKER, unused_subpriority_offset=2, selector:req, delay:req, initial_blend_y:req, target_blend_y:req, color:req
+	createsprite gSimplePaletteBlendSpriteTemplate, \unused_anim_battler, \unused_subpriority_offset, \selector, \delay, \initial_blend_y, \target_blend_y, \color
+	.endm
+
+	.macro complexpaletteblend unused_anim_battler=ANIM_ATTACKER, unused_subpriority_offset=2, selector:req, delay:req, num_blends:req, color1:req, blend_y1:req, color2:req, blend_y2:req
+	createsprite gComplexPaletteBlendSpriteTemplate, \unused_anim_battler, \unused_subpriority_offset, \selector, \delay, \num_blends, \color1, \blend_y1, \color2, \blend_y2
+	.endm
+
+	.macro shakemonorterrain unused_anim_battler=ANIM_ATTACKER, unused_subpriority_offset=2, velocity:req, shake_duration:req, duration:req, type:req, battler_selector
+	.if \type == SHAKE_MON_X || \type == SHAKE_MON_Y
+	.ifb \battler_selector
+	.error "battler_selector required for SHAKE_MON_X or SHAKE_MON_Y"
+	.endif
+	.else
+	.ifnb \battler_selector
+	.warning "unused battler_selector in shakemonorterrain"
+	.endif
+	.endif
+	.ifb \battler_selector
+	createsprite gShakeMonOrTerrainSpriteTemplate, \unused_anim_battler, \unused_subpriority_offset, \velocity, \shake_duration, \duration, \type
+	.else
+	createsprite gShakeMonOrTerrainSpriteTemplate, \unused_anim_battler, \unused_subpriority_offset, \velocity, \shake_duration, \duration, \type, \battler_selector
+	.endif
+	.endm
+
+	.macro createmegahornhornsprite anim_battler:req, subpriority_offset:req, x1:req, y1:req, x2:req, y2:req, duration:req
+	createsprite gMegahornHornSpriteTemplate, \anim_battler, \subpriority_offset, \x1, \y1, \x2, \y2, \duration
+	.endm
+
+	.macro createleechlifeneedlesprite anim_battler:req, subpriority_offset:req, x:req, y:req, duration:req
+	createsprite gLeechLifeNeedleSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \duration
+	.endm
+
+	.macro createwebthreadsprite anim_battler:req, subpriority_offset:req, x:req, y:req, unk2:req, amplitude:req, targets_both:req
+	createsprite gWebThreadSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \unk2, \amplitude, \targets_both
+	.endm
+
+	.macro createstringwrapsprite anim_battler:req, subpriority_offset:req, x:req, y:req
+	createsprite gStringWrapSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y
+	.endm
+
+	.macro createlinearstingersprite anim_battler:req, subpriority_offset:req, initial_x:req, initial_y:req, target_x:req, target_y:req, duration:req
+	createsprite gLinearStingerSpriteTemplate, \anim_battler, \subpriority_offset, \initial_x, \initial_y, \target_x, \target_y, \duration
+	.endm
+
+	.macro createpinmissilesprite anim_battler:req, subpriority_offset:req, initial_x:req, initial_y:req, target_x:req, target_y:req, duration:req, wave_amplitude:req
+	createsprite gPinMissileSpriteTemplate, \anim_battler, \subpriority_offset, \initial_x, \initial_y, \target_x, \target_y, \duration, \wave_amplitude
+	.endm
+
+	.macro createtailgloworbsprite anim_battler:req, subpriority_offset:req, relative_to:req
+	createsprite gTailGlowOrbSpriteTemplate, \anim_battler, \subpriority_offset, \relative_to
+	.endm
+
+	.macro createsharpteethsprite anim_battler:req, subpriority_offset:req, x:req, y:req, animation:req, x_velocity:req, y_velocity:req, half_duration:req
+	createsprite gSharpTeethSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \animation, \x_velocity, \y_velocity, \half_duration
+	.endm
+
+	.macro createclampjawsprite anim_battler:req, subpriority_offset:req, x:req, y:req, animation:req, x_velocity:req, y_velocity:req, half_duration:req
+	createsprite gClampJawSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \animation, \x_velocity, \y_velocity, \half_duration
+	.endm
+
+	.macro createteardropsprite anim_battler:req, subpriority_offset:req, relative_to:req, type:req
+	createsprite gTearDropSpriteTemplate, \anim_battler, \subpriority_offset, \relative_to, \type
+	.endm
+
+	.macro createclawslashsprite anim_battler:req, subpriority_offset:req, x:req, y:req, animation:req
+	createsprite gClawSlashSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \animation
+	.endm
+
+	.macro createoutrageflamesprite anim_battler:req, subpriority_offset:req, x:req, y:req, duration:req, x_velocity:req, y_velocity:req, flicker_duration:req
+	createsprite gOutrageFlameSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \duration, \x_velocity, \y_velocity, \flicker_duration
+	.endm
+
+	.macro createdragonbreathfiresprite anim_battler:req, subpriority_offset:req, initial_x:req, initial_y:req, target_x:req, target_y:req, duration:req
+	createsprite gDragonBreathFireSpriteTemplate, \anim_battler, \subpriority_offset, \initial_x, \initial_y, \target_x, \target_y, \duration
+	.endm
+
+	.macro createdragonragefirespitsprite anim_battler:req, subpriority_offset:req, initial_x:req, initial_y:req, target_x:req, target_y:req, duration:req
+	createsprite gDragonRageFireSpitSpriteTemplate, \anim_battler, \subpriority_offset, \initial_x, \initial_y, \target_x, \target_y, \duration
+	.endm
+
+	.macro createdragonragefireplumesprite anim_battler:req, subpriority_offset:req, relative_to:req, x:req, y:req
+	createsprite gDragonRageFirePlumeSpriteTemplate, \anim_battler, \subpriority_offset, \relative_to, \x, \y
+	.endm
+
+	.macro createdragondanceorbsprite anim_battler:req, subpriority_offset:req, angle:req
+	createsprite gDragonDanceOrbSpriteTemplate, \anim_battler, \subpriority_offset, \angle
+	.endm
+
+	.macro createoverheatflamesprite anim_battler:req, subpriority_offset:req, speed:req, unk1:req, unk2:req, duration:req, y:req
+	createsprite gOverheatFlameSpriteTemplate, \anim_battler, \subpriority_offset, \speed, \unk1, \unk2, \duration, \y
+	.endm
+
+	.macro createcirclingsparklesprite anim_battler:req, subpriority_offset:req, x:req, y:req
+	createsprite sCirclingSparkleSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y
+	.endm
+
+	.macro createconfusionducksprite anim_battler:req, subpriority_offset:req, x:req, y:req, wave_offset:req, wave_period:req, duration:req
+	createsprite gConfusionDuckSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \wave_offset, \wave_period, \duration
+	.endm
+
+	.macro createbasichitsplatsprite anim_battler:req, subpriority_offset:req, x:req, y:req, relative_to:req, animation:req
+	createsprite gBasicHitSplatSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \relative_to, \animation
+	.endm
+
+	.macro createpersisthitsplatsprite anim_battler:req, subpriority_offset:req, x:req, y:req, relative_to:req, animation:req, duration:req
+	createsprite gPersistHitSplatSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \relative_to, \animation, \duration
+	.endm
+
+	.macro createhandleinverthitsplatsprite anim_battler:req, subpriority_offset:req, x:req, y:req, relative_to:req, animation:req
+	createsprite gHandleInvertHitSplatSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \relative_to, \animation
+	.endm
+
+	.macro createrandomposhitsplatsprite anim_battler:req, subpriority_offset:req, relative_to:req, animation
+	.ifnb \animation
+	createsprite gRandomPosHitSplatSpriteTemplate, \anim_battler, \subpriority_offset, \relative_to, \animation
+	.else
+	createsprite gRandomPosHitSplatSpriteTemplate, \anim_battler, \subpriority_offset, \relative_to, -1
+	.endif
+	.endm
+
+	.macro createmonedgehitsplatsprite anim_battler:req, subpriority_offset:req, relative_to:req, x:req, y:req, animation:req
+	createsprite gMonEdgeHitSplatSpriteTemplate, \anim_battler, \subpriority_offset, \relative_to, \x, \y, \animation
+	.endm
+
+	.macro createcrossimpactsprite anim_battler:req, subpriority_offset:req, x:req, y:req, relative_to:req, duration:req
+	createsprite gCrossImpactSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \relative_to, \duration
+	.endm
+
+	.macro createflashinghitsplatsprite anim_battler:req, subpriority_offset:req, x:req, y:req, relative_to:req, animation:req
+	createsprite gFlashingHitSplatSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \relative_to, \animation
+	.endm
+
+@ createvisualtask wrappers
+@ The arguments are based on the CMD_ARGS of the task.
+
+	.macro metallicshine priority=5, permanent:req, color
+	.ifb \color
+	createvisualtask AnimTask_MetallicShine, \priority, \permanent, FALSE, RGB_BLACK
+	.else
+	createvisualtask AnimTask_MetallicShine, \priority, \permanent, TRUE, \color
+	.endif
+	.endm
+
+	.macro setgrayscalepal priority=5, battler:req
+	createvisualtask AnimTask_SetGrayscaleOrOriginalPal, \priority, \battler, FALSE
+	.endm
+
+	.macro setoriginalpal priority=5, battler:req
+	createvisualtask AnimTask_SetGrayscaleOrOriginalPal, \priority, \battler, TRUE
+	.endm
+
+	.macro attackerfadetoinvisible priority=2, step_delay:req
+	createvisualtask AnimTask_AttackerFadeToInvisible, \priority, \step_delay
+	.endm
+
+	.macro attackerfadefrominvisible priority=2, step_delay:req
+	createvisualtask AnimTask_AttackerFadeFromInvisible, \priority, \step_delay
+	.endm
+
+	.macro blendcolorcycle priority=2, selector:req, delay:req, num_blends:req, initial_blend_y:req, target_blend_y:req, color:req
+	createvisualtask AnimTask_BlendColorCycle, \priority, \selector, \delay, \num_blends, \initial_blend_y, \target_blend_y, \color
+	.endm
+
+	.macro blendcolorcycleexclude priority=2, unk0:req, delay:req, num_blends:req, initial_blend_y:req, target_blend_y:req, color:req
+	createvisualtask AnimTask_BlendColorCycleExclude, \priority, \unk0, \delay, \num_blends, \initial_blend_y, \target_blend_y, \color
+	.endm
+
+	.macro blendcolorcyclebytag priority=2, tag:req, delay:req, num_blends:req, initial_blend_y:req, target_blend_y:req, color:req
+	createvisualtask AnimTask_BlendColorCycleByTag, \priority, \tag, \delay, \num_blends, \initial_blend_y, \target_blend_y, \color
+	.endm
+
+	.macro flashanimtagwithcolor priority=2, tag:req, delay:req, num_blends:req, color1:req, blend_y1:req, color2:req, blend_y2:req
+	createvisualtask AnimTask_FlashAnimTagWithColor, \priority, \tag, \delay, \num_blends, \color1, \blend_y1, \color2, \blend_y2
+	.endm
+
+	.macro invertscreencolor priority=2, scenery:req, attacker:req, target:req
+	@ NOTE: These generate 0x000 or 0x101 to match, but the code checks for '& 0x100'.
+	createvisualtask AnimTask_InvertScreenColor, \priority, (\scenery << 8) | \scenery, (\attacker << 8) | \attacker, (\target << 8) | \target
+	.endm
+
+	.macro tintpalettes priority=2, scenery:req, attacker:req, target:req, duration:req, color:req
+	createvisualtask AnimTask_TintPalettes, \priority, \scenery << 8, \attacker << 8, \target << 8, \duration, \color & 0x1F, (\color >> 5) & 0x1F, (\color >> 10) & 0x1F
+	.endm
+
+	.macro shakebattleterrain priority=2, x_offset:req, y_offset:req, shakes:req, delay:req
+	createvisualtask AnimTask_ShakeBattleTerrain, \priority, \x_offset, \y_offset, \shakes, \delay
+	.endm
+
+@ fixed-point constructors
+@ Q8(n, d) means "n/d represented in a Q8", e.g. 'Q8(32, 10)' is a Q8
+@ repserentation of 32/10, aka 3.2.
+
+#define Q8(n, d) ((n * 256) / d)
