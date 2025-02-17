@@ -382,6 +382,15 @@ At this point, you can choose a folder to store pokeemerald (and agbcc) into. If
 
 If this works, then proceed to [Installation](#installation). Otherwise, ask for help on Discord or IRC (see [README.md](README.md)).
 
+## Docker
+A Dockerfile is provided for your convenience. To begin, setup docker on your local machine following the instructions at https://docs.docker.com/desktop/. Then, run:
+
+```bash
+docker build . -t pret/pokeemerald
+docker run -w /agbcc -v .:/rom pret/pokeemerald ./install.sh /rom
+docker run -w /rom -v .:/rom pret/pokeemerald make
+```
+
 ## Installation
 
 <details>
