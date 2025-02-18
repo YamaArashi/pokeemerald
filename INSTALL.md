@@ -605,6 +605,19 @@ make TOOLCHAIN="/usr/local/arm-none-eabi"
 ```
 To compile the `modern` target with this toolchain, the subdirectories `lib`, `include`, and `arm-none-eabi` must also be present.
 
+### Nix
+
+There is `default.nix` file included in the repo, you can build the project by running:
+```bash
+nix-build
+```
+
+If you want to build inside a development shell instead:
+```bash
+nix-shell
+buildPhase
+```
+
 ### Building with debug info under a modern toolchain
 
 To build **pokeemerald.elf** with debug symbols under a modern toolchain:
