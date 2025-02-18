@@ -3,12 +3,6 @@
 
 #include "map_groups.h"
 
-// Warps using this map will instead use the warp data stored in gSaveBlock1Ptr->dynamicWarp.
-// Used for warps that need to change destinations, e.g. when stepping off an elevator.
-#define MAP_DYNAMIC (0x7F | (0x7F << 8))
-
-#define MAP_UNDEFINED (0xFF | (0xFF << 8))
-
 #define MAP_GROUP(map) (map >> 8)
 #define MAP_NUM(map) (map & 0xFF)
 
