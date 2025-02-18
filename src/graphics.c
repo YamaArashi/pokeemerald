@@ -942,7 +942,7 @@ const u32 gBattleVSFrame_Pal[] = INCBIN_U32("graphics/battle_transitions/vs_fram
 
 const u32 gVsLettersGfx[] = INCBIN_U32("graphics/battle_transitions/vs.4bpp.lz");
 
-#include "data/graphics/battle_terrain.h"
+#include "data/graphics/battle_environment.h"
 
 // Battle Dome
 const u32 gDomeTourneyTree_Gfx[] = INCBIN_U32("graphics/battle_frontier/tourney_tree.4bpp.lz");

@@ -280,7 +280,7 @@ static void Cmd_sethail(void);
 static void Cmd_trymemento(void);
 static void Cmd_setforcedtarget(void);
 static void Cmd_setcharge(void);
-static void Cmd_callterrainattack(void);
+static void Cmd_callenvironmentattack(void);
 static void Cmd_cureifburnedparalysedorpoisoned(void);
 static void Cmd_settorment(void);
 static void Cmd_jumpifnodamage(void);
@@ -311,7 +311,7 @@ static void Cmd_trycastformdatachange(void);
 static void Cmd_settypebasedhalvers(void);
 static void Cmd_setweatherballtype(void);
 static void Cmd_tryrecycleitem(void);
-static void Cmd_settypetoterrain(void);
+static void Cmd_settypetoenvironment(void);
 static void Cmd_pursuitdoubles(void);
 static void Cmd_snatchsetbattlers(void);
 static void Cmd_removelightscreenreflect(void);
@@ -532,7 +532,7 @@ void (* const gBattleScriptingCommandsTable[])(void) =
     Cmd_trymemento,                              //0xC9
     Cmd_setforcedtarget,                         //0xCA
     Cmd_setcharge,                               //0xCB
-    Cmd_callterrainattack,                       //0xCC
+    Cmd_callenvironmentattack,                   //0xCC
     Cmd_cureifburnedparalysedorpoisoned,         //0xCD
     Cmd_settorment,                              //0xCE
     Cmd_jumpifnodamage,                          //0xCF
@@ -563,7 +563,7 @@ void (* const gBattleScriptingCommandsTable[])(void) =
     Cmd_settypebasedhalvers,                     //0xE8
     Cmd_setweatherballtype,                      //0xE9
     Cmd_tryrecycleitem,                          //0xEA
-    Cmd_settypetoterrain,                        //0xEB
+    Cmd_settypetoenvironment,                    //0xEB
     Cmd_pursuitdoubles,                          //0xEC
     Cmd_snatchsetbattlers,                       //0xED
     Cmd_removelightscreenreflect,                //0xEE
@@ -758,16 +758,16 @@ static const u8 sFlailHpScaleToPowerTable[] =
 
 static const u16 sNaturePowerMoves[] =
 {
-    [BATTLE_TERRAIN_GRASS]      = MOVE_STUN_SPORE,
-    [BATTLE_TERRAIN_LONG_GRASS] = MOVE_RAZOR_LEAF,
-    [BATTLE_TERRAIN_SAND]       = MOVE_EARTHQUAKE,
-    [BATTLE_TERRAIN_UNDERWATER] = MOVE_HYDRO_PUMP,
-    [BATTLE_TERRAIN_WATER]      = MOVE_SURF,
-    [BATTLE_TERRAIN_POND]       = MOVE_BUBBLE_BEAM,
-    [BATTLE_TERRAIN_MOUNTAIN]   = MOVE_ROCK_SLIDE,
-    [BATTLE_TERRAIN_CAVE]       = MOVE_SHADOW_BALL,
-    [BATTLE_TERRAIN_BUILDING]   = MOVE_SWIFT,
-    [BATTLE_TERRAIN_PLAIN]      = MOVE_SWIFT
+    [BATTLE_ENVIRONMENT_GRASS]      = MOVE_STUN_SPORE,
+    [BATTLE_ENVIRONMENT_LONG_GRASS] = MOVE_RAZOR_LEAF,
+    [BATTLE_ENVIRONMENT_SAND]       = MOVE_EARTHQUAKE,
+    [BATTLE_ENVIRONMENT_UNDERWATER] = MOVE_HYDRO_PUMP,
+    [BATTLE_ENVIRONMENT_WATER]      = MOVE_SURF,
+    [BATTLE_ENVIRONMENT_POND]       = MOVE_BUBBLE_BEAM,
+    [BATTLE_ENVIRONMENT_MOUNTAIN]   = MOVE_ROCK_SLIDE,
+    [BATTLE_ENVIRONMENT_CAVE]       = MOVE_SHADOW_BALL,
+    [BATTLE_ENVIRONMENT_BUILDING]   = MOVE_SWIFT,
+    [BATTLE_ENVIRONMENT_PLAIN]      = MOVE_SWIFT
 };
 
 // format: min. weight (hectograms), base power
@@ -823,18 +823,18 @@ static const u8 sPickupProbabilities[] =
     30, 40, 50, 60, 70, 80, 90, 94, 98
 };
 
-static const u8 sTerrainToType[] =
+static const u8 sEnvironmentToType[] =
 {
-    [BATTLE_TERRAIN_GRASS]      = TYPE_GRASS,
-    [BATTLE_TERRAIN_LONG_GRASS] = TYPE_GRASS,
-    [BATTLE_TERRAIN_SAND]       = TYPE_GROUND,
-    [BATTLE_TERRAIN_UNDERWATER] = TYPE_WATER,
-    [BATTLE_TERRAIN_WATER]      = TYPE_WATER,
-    [BATTLE_TERRAIN_POND]       = TYPE_WATER,
-    [BATTLE_TERRAIN_MOUNTAIN]   = TYPE_ROCK,
-    [BATTLE_TERRAIN_CAVE]       = TYPE_ROCK,
-    [BATTLE_TERRAIN_BUILDING]   = TYPE_NORMAL,
-    [BATTLE_TERRAIN_PLAIN]      = TYPE_NORMAL,
+    [BATTLE_ENVIRONMENT_GRASS]      = TYPE_GRASS,
+    [BATTLE_ENVIRONMENT_LONG_GRASS] = TYPE_GRASS,
+    [BATTLE_ENVIRONMENT_SAND]       = TYPE_GROUND,
+    [BATTLE_ENVIRONMENT_UNDERWATER] = TYPE_WATER,
+    [BATTLE_ENVIRONMENT_WATER]      = TYPE_WATER,
+    [BATTLE_ENVIRONMENT_POND]       = TYPE_WATER,
+    [BATTLE_ENVIRONMENT_MOUNTAIN]   = TYPE_ROCK,
+    [BATTLE_ENVIRONMENT_CAVE]       = TYPE_ROCK,
+    [BATTLE_ENVIRONMENT_BUILDING]   = TYPE_NORMAL,
+    [BATTLE_ENVIRONMENT_PLAIN]      = TYPE_NORMAL,
 };
 
 // - ITEM_ULTRA_BALL skips Master Ball and ITEM_NONE
@@ -9129,10 +9129,10 @@ static void Cmd_setcharge(void)
 }
 
 // Nature Power
-static void Cmd_callterrainattack(void)
+static void Cmd_callenvironmentattack(void)
 {
     gHitMarker &= ~HITMARKER_ATTACKSTRING_PRINTED;
-    gCurrentMove = sNaturePowerMoves[gBattleTerrain];
+    gCurrentMove = sNaturePowerMoves[gBattleEnvironment];
     gBattlerTarget = GetMoveTarget(gCurrentMove, NO_TARGET_OVERRIDE);
     BattleScriptPush(gBattleScriptsForMoveEffects[gBattleMoves[gCurrentMove].effect]);
     gBattlescriptCurrInstr++;
@@ -9641,30 +9641,30 @@ static void Cmd_jumpifhasnohp(void)
 
 static void Cmd_getsecretpowereffect(void)
 {
-    switch (gBattleTerrain)
+    switch (gBattleEnvironment)
     {
-    case BATTLE_TERRAIN_GRASS:
+    case BATTLE_ENVIRONMENT_GRASS:
         gBattleCommunication[MOVE_EFFECT_BYTE] = MOVE_EFFECT_POISON;
         break;
-    case BATTLE_TERRAIN_LONG_GRASS:
+    case BATTLE_ENVIRONMENT_LONG_GRASS:
         gBattleCommunication[MOVE_EFFECT_BYTE] = MOVE_EFFECT_SLEEP;
         break;
-    case BATTLE_TERRAIN_SAND:
+    case BATTLE_ENVIRONMENT_SAND:
         gBattleCommunication[MOVE_EFFECT_BYTE] = MOVE_EFFECT_ACC_MINUS_1;
         break;
-    case BATTLE_TERRAIN_UNDERWATER:
+    case BATTLE_ENVIRONMENT_UNDERWATER:
         gBattleCommunication[MOVE_EFFECT_BYTE] = MOVE_EFFECT_DEF_MINUS_1;
         break;
-    case BATTLE_TERRAIN_WATER:
+    case BATTLE_ENVIRONMENT_WATER:
         gBattleCommunication[MOVE_EFFECT_BYTE] = MOVE_EFFECT_ATK_MINUS_1;
         break;
-    case BATTLE_TERRAIN_POND:
+    case BATTLE_ENVIRONMENT_POND:
         gBattleCommunication[MOVE_EFFECT_BYTE] = MOVE_EFFECT_SPD_MINUS_1;
         break;
-    case BATTLE_TERRAIN_MOUNTAIN:
+    case BATTLE_ENVIRONMENT_MOUNTAIN:
         gBattleCommunication[MOVE_EFFECT_BYTE] = MOVE_EFFECT_CONFUSION;
         break;
-    case BATTLE_TERRAIN_CAVE:
+    case BATTLE_ENVIRONMENT_CAVE:
         gBattleCommunication[MOVE_EFFECT_BYTE] = MOVE_EFFECT_FLINCH;
         break;
     default:
@@ -9851,12 +9851,12 @@ static void Cmd_tryrecycleitem(void)
     }
 }
 
-static void Cmd_settypetoterrain(void)
+static void Cmd_settypetoenvironment(void)
 {
-    if (!IS_BATTLER_OF_TYPE(gBattlerAttacker, sTerrainToType[gBattleTerrain]))
+    if (!IS_BATTLER_OF_TYPE(gBattlerAttacker, sEnvironmentToType[gBattleEnvironment]))
     {
-        SET_BATTLER_TYPE(gBattlerAttacker, sTerrainToType[gBattleTerrain]);
-        PREPARE_TYPE_BUFFER(gBattleTextBuff1, sTerrainToType[gBattleTerrain]);
+        SET_BATTLER_TYPE(gBattlerAttacker, sEnvironmentToType[gBattleEnvironment]);
+        PREPARE_TYPE_BUFFER(gBattleTextBuff1, sEnvironmentToType[gBattleEnvironment]);
 
         gBattlescriptCurrInstr += 5;
     }

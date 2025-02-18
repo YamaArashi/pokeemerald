@@ -22,7 +22,7 @@ static void AnimTask_DigEndBounceMovementSetInvisible(u8);
 static void AnimTask_DigSetVisibleUnderground(u8);
 static void AnimTask_DigRiseUpFromHole(u8);
 static void SetDigScanlineEffect(u8, s16, s16);
-static void AnimTask_ShakeTerrain(u8);
+static void AnimTask_ShakePlatforms(u8);
 static void AnimTask_ShakeBattlers(u8);
 static void SetBattlersXOffsetForShake(struct Task *);
 static void WaitForFissureCompletion(u8);
@@ -564,12 +564,12 @@ static void AnimDigDirtMound(struct Sprite *sprite)
 #define tMaxTime             data[3]
 #define tbattlerSpriteIds(i) data[9 + (i)]
 #define tNumBattlers         data[13] // AnimTask_ShakeBattlers
-#define tInitialX            data[13] // AnimTask_ShakeTerrain
+#define tInitialX            data[13] // AnimTask_ShakePlatforms
 #define tHorizOffset         data[14]
 #define tInitHorizOffset     data[15]
 
-// Shakes battler(s) or the battle terrain back and forth horizontally. Used by e.g. Earthquake, Eruption
-// arg0: What to shake. 0-3 for any specific battler, MAX_BATTLERS_COUNT for all battlers, MAX_BATTLERS_COUNT + 1 for the terrain
+// Shakes battler(s) or the battle platforms back and forth horizontally. Used by e.g. Earthquake, Eruption
+// arg0: What to shake. 0-3 for any specific battler, MAX_BATTLERS_COUNT for all battlers, MAX_BATTLERS_COUNT + 1 for the platforms
 // arg1: Shake intensity, used to calculate horizontal pixel offset (if 0, use move power instead)
 // arg2: Length of time to shake for
 void AnimTask_HorizontalShake(u8 taskId)
@@ -585,9 +585,9 @@ void AnimTask_HorizontalShake(u8 taskId)
     task->tMaxTime = gBattleAnimArgs[2];
     switch (gBattleAnimArgs[0])
     {
-    case MAX_BATTLERS_COUNT + 1: // Shake terrain
+    case MAX_BATTLERS_COUNT + 1: // Shake platforms
         task->tInitialX = gBattle_BG3_X;
-        task->func = AnimTask_ShakeTerrain;
+        task->func = AnimTask_ShakePlatforms;
         break;
     case MAX_BATTLERS_COUNT: // Shake all battlers
         task->tNumBattlers = 0;
@@ -616,7 +616,7 @@ void AnimTask_HorizontalShake(u8 taskId)
     }
 }
 
-static void AnimTask_ShakeTerrain(u8 taskId)
+static void AnimTask_ShakePlatforms(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
 

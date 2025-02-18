@@ -24,16 +24,16 @@ static void BattleIntroSlidePartner(u8);
 
 static const TaskFunc sBattleIntroSlideFuncs[] =
 {
-    [BATTLE_TERRAIN_GRASS]      = BattleIntroSlide1,
-    [BATTLE_TERRAIN_LONG_GRASS] = BattleIntroSlide1,
-    [BATTLE_TERRAIN_SAND]       = BattleIntroSlide2,
-    [BATTLE_TERRAIN_UNDERWATER] = BattleIntroSlide2,
-    [BATTLE_TERRAIN_WATER]      = BattleIntroSlide2,
-    [BATTLE_TERRAIN_POND]       = BattleIntroSlide1,
-    [BATTLE_TERRAIN_MOUNTAIN]   = BattleIntroSlide1,
-    [BATTLE_TERRAIN_CAVE]       = BattleIntroSlide1,
-    [BATTLE_TERRAIN_BUILDING]   = BattleIntroSlide3,
-    [BATTLE_TERRAIN_PLAIN]      = BattleIntroSlide3,
+    [BATTLE_ENVIRONMENT_GRASS]      = BattleIntroSlide1,
+    [BATTLE_ENVIRONMENT_LONG_GRASS] = BattleIntroSlide1,
+    [BATTLE_ENVIRONMENT_SAND]       = BattleIntroSlide2,
+    [BATTLE_ENVIRONMENT_UNDERWATER] = BattleIntroSlide2,
+    [BATTLE_ENVIRONMENT_WATER]      = BattleIntroSlide2,
+    [BATTLE_ENVIRONMENT_POND]       = BattleIntroSlide1,
+    [BATTLE_ENVIRONMENT_MOUNTAIN]   = BattleIntroSlide1,
+    [BATTLE_ENVIRONMENT_CAVE]       = BattleIntroSlide1,
+    [BATTLE_ENVIRONMENT_BUILDING]   = BattleIntroSlide3,
+    [BATTLE_ENVIRONMENT_PLAIN]      = BattleIntroSlide3,
 };
 
 void SetAnimBgAttribute(u8 bgId, u8 attributeId, u8 value)
@@ -100,9 +100,9 @@ int GetAnimBgAttribute(u8 bgId, u8 attributeId)
 }
 
 #define tState data[0]
-#define tTerrain data[1]
+#define tEnvironment data[1]
 
-void HandleIntroSlide(u8 terrain)
+void HandleIntroSlide(u8 environment)
 {
     u8 taskId;
 
@@ -120,16 +120,16 @@ void HandleIntroSlide(u8 terrain)
     }
     else if ((gBattleTypeFlags & BATTLE_TYPE_KYOGRE_GROUDON) && gGameVersion != VERSION_RUBY)
     {
-        terrain = BATTLE_TERRAIN_UNDERWATER;
+        environment = BATTLE_ENVIRONMENT_UNDERWATER;
         taskId = CreateTask(BattleIntroSlide2, 0);
     }
     else
     {
-        taskId = CreateTask(sBattleIntroSlideFuncs[terrain], 0);
+        taskId = CreateTask(sBattleIntroSlideFuncs[environment], 0);
     }
 
     gTasks[taskId].tState = 0;
-    gTasks[taskId].tTerrain = terrain;
+    gTasks[taskId].tEnvironment = environment;
     gTasks[taskId].data[2] = 0;
     gTasks[taskId].data[3] = 0;
     gTasks[taskId].data[4] = 0;
@@ -194,7 +194,7 @@ static void BattleIntroSlide1(u8 taskId)
         }
         else
         {
-            if (gTasks[taskId].tTerrain == BATTLE_TERRAIN_LONG_GRASS)
+            if (gTasks[taskId].tEnvironment == BATTLE_ENVIRONMENT_LONG_GRASS)
             {
                 if (gBattle_BG1_Y != (u16)(-80))
                     gBattle_BG1_Y -= 2;
@@ -240,18 +240,18 @@ static void BattleIntroSlide2(u8 taskId)
 {
     int i;
 
-    switch (gTasks[taskId].tTerrain)
+    switch (gTasks[taskId].tEnvironment)
     {
-    case BATTLE_TERRAIN_SAND:
-    case BATTLE_TERRAIN_WATER:
+    case BATTLE_ENVIRONMENT_SAND:
+    case BATTLE_ENVIRONMENT_WATER:
         gBattle_BG1_X += 8;
         break;
-    case BATTLE_TERRAIN_UNDERWATER:
+    case BATTLE_ENVIRONMENT_UNDERWATER:
         gBattle_BG1_X += 6;
         break;
     }
 
-    if (gTasks[taskId].tTerrain == BATTLE_TERRAIN_WATER)
+    if (gTasks[taskId].tEnvironment == BATTLE_ENVIRONMENT_WATER)
     {
         gBattle_BG1_Y = Cos2(gTasks[taskId].data[6]) / 512 - 8;
         if (gTasks[taskId].data[6] < 180)

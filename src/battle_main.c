@@ -144,7 +144,7 @@ EWRAM_DATA u8 gBattleTextBuff3[TEXT_BUFF_ARRAY_COUNT] = {0};
 // it will instead overflow into useful data.
 EWRAM_DATA static u32 sFlickerArray[25] = {0};
 EWRAM_DATA u32 gBattleTypeFlags = 0;
-EWRAM_DATA u8 gBattleTerrain = 0;
+EWRAM_DATA u8 gBattleEnvironment = 0;
 EWRAM_DATA u32 gUnusedFirstBattleVar1 = 0; // Never read
 EWRAM_DATA struct MultiPartnerMenuPokemon gMultiPartnerParty[MULTI_PARTY_SIZE] = {0};
 EWRAM_DATA static struct MultiPartnerMenuPokemon* sMultiPartnerPartyBuffer = NULL;
@@ -669,9 +669,9 @@ static void CB2_InitBattleInternal(void)
     gBattle_BG3_X = 0;
     gBattle_BG3_Y = 0;
 
-    gBattleTerrain = BattleSetup_GetTerrainId();
+    gBattleEnvironment = BattleSetup_GetEnvironmentId();
     if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
-        gBattleTerrain = BATTLE_TERRAIN_BUILDING;
+        gBattleEnvironment = BATTLE_ENVIRONMENT_BUILDING;
 
     InitBattleBgsVideo();
     LoadBattleTextboxAndBackground();
@@ -3382,7 +3382,7 @@ static void BattleIntroPrepareBackgroundSlide(void)
     if (gBattleControllerExecFlags == 0)
     {
         gActiveBattler = GetBattlerAtPosition(0);
-        BtlController_EmitIntroSlide(BUFFER_A, gBattleTerrain);
+        BtlController_EmitIntroSlide(BUFFER_A, gBattleEnvironment);
         MarkBattlerForControllerExec(gActiveBattler);
         gBattleMainFunc = BattleIntroDrawTrainersOrMonsSprites;
         gBattleCommunication[MULTIUSE_STATE] = 0;
