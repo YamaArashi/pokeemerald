@@ -7,6 +7,7 @@
 extern struct Mail gTradeMail[PARTY_SIZE];
 extern u8 gSelectedTradeMonPositions[2];
 
+extern const u32 gTradePlatform_Tilemap[];
 extern const struct WindowTemplate gTradeEvolutionSceneYesNoWindowTemplate;
 
 s32 GetGameProgressForLinkTrade(void);
