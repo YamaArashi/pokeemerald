@@ -1319,10 +1319,8 @@ s8 BattleAnimAdjustPanning2(s8 pan)
     return pan;
 }
 
-s16 KeepPanInRange(s16 panArg, int oldPan)
+s16 KeepPanInRange(s16 pan)
 {
-    s16 pan = panArg;
-
     if (pan > SOUND_PAN_TARGET)
         pan = SOUND_PAN_TARGET;
     else if (pan < SOUND_PAN_ATTACKER)
@@ -1336,9 +1334,9 @@ s16 CalculatePanIncrement(s16 sourcePan, s16 targetPan, s16 incrementPan)
     s16 ret;
 
     if (sourcePan < targetPan)
-        ret = ((incrementPan < 0) ? -incrementPan : incrementPan);
+        ret = abs(incrementPan);
     else if (sourcePan > targetPan)
-        ret = -((incrementPan < 0) ? -incrementPan : incrementPan);
+        ret = -abs(incrementPan);
     else
         ret = 0;
 
