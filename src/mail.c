@@ -48,8 +48,8 @@ struct MailLayout
 struct MailGraphics
 {
     const u16 *palette;
-    const u8 *tiles;
-    const u8 *tileMap;
+    const u32 *tiles;
+    const u32 *tileMap;
     u32 unused;
     u16 textColor;
     u16 textShadow;
