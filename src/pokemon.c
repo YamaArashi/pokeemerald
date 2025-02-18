@@ -2162,6 +2162,7 @@ void ZeroBoxMonData(struct BoxPokemon *boxMon)
 
 void ZeroMonData(struct Pokemon *mon)
 {
+#ifndef UBFIX
     u32 arg;
     ZeroBoxMonData(&mon->box);
     arg = 0;
@@ -2176,6 +2177,11 @@ void ZeroMonData(struct Pokemon *mon)
     SetMonData(mon, MON_DATA_SPDEF, &arg);
     arg = MAIL_NONE;
     SetMonData(mon, MON_DATA_MAIL, &arg);
+#else
+    u16 mail = MAIL_NONE;
+    memset(mon, 0, sizeof(*mon));
+    SetMonData(mon, MON_DATA_MAIL, &mail);
+#endif
 }
 
 void ZeroPlayerPartyMons(void)
@@ -2780,9 +2786,14 @@ void CreateEnemyEventMon(void)
     CreateEventMon(&gEnemyParty[0], species, level, USE_RANDOM_IVS, FALSE, 0, OT_ID_PLAYER_ID, 0);
     if (itemId)
     {
+#ifndef UBFIX
         u8 heldItem[2];
         heldItem[0] = itemId;
         heldItem[1] = itemId >> 8;
+#else
+        // gSpecialVar_0x8006 is a u16
+        u16 *heldItem = &gSpecialVar_0x8006;
+#endif
         SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM, heldItem);
     }
 }
@@ -4071,13 +4082,19 @@ u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data)
 
 u32 GetBoxMonData2(struct BoxPokemon *boxMon, s32 field) __attribute__((alias("GetBoxMonData3")));
 
+#ifndef UBFIX
 #define SET8(lhs) (lhs) = *data
 #define SET16(lhs) (lhs) = data[0] + (data[1] << 8)
 #define SET32(lhs) (lhs) = data[0] + (data[1] << 8) + (data[2] << 16) + (data[3] << 24)
+#else
+#define SET8(lhs) (lhs) = *(u8 *)data
+#define SET16(lhs) (lhs) = *(u16 *)data
+#define SET32(lhs) (lhs) = *(u32 *)data
+#endif
 
 void SetMonData(struct Pokemon *mon, s32 field, const void *dataArg)
 {
-    const u8 *data = dataArg;
+    const void *data = dataArg;
 
     switch (field)
     {
@@ -4121,7 +4138,11 @@ void SetMonData(struct Pokemon *mon, s32 field, const void *dataArg)
 
 void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
 {
+    #ifndef UBFIX
     const u8 *data = dataArg;
+    #else
+    const void* data = dataArg;
+    #endif
 
     struct PokemonSubstruct0 *substruct0 = NULL;
     struct PokemonSubstruct1 *substruct1 = NULL;
@@ -4157,10 +4178,14 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
         break;
     case MON_DATA_NICKNAME:
     {
+        #ifndef UBFIX
         s32 i;
         for (i = 0; i < POKEMON_NAME_LENGTH; i++)
             boxMon->nickname[i] = data[i];
         break;
+        #else
+        memcpy(boxMon->nickname, data, POKEMON_NAME_LENGTH);
+        #endif
     }
     case MON_DATA_LANGUAGE:
         SET8(boxMon->language);
@@ -4176,9 +4201,13 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
         break;
     case MON_DATA_OT_NAME:
     {
+        #ifndef UBFIX
         s32 i;
         for (i = 0; i < PLAYER_NAME_LENGTH; i++)
             boxMon->otName[i] = data[i];
+        #else
+        memcpy(boxMon->otName, data, PLAYER_NAME_LENGTH);
+        #endif
         break;
     }
     case MON_DATA_MARKINGS:
@@ -4267,8 +4296,12 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
         break;
     case MON_DATA_MET_LEVEL:
     {
+        #ifndef UBFIX
         u8 metLevel = *data;
         substruct3->metLevel = metLevel;
+        #else
+        SET8(substruct3->metLevel);
+        #endif
         break;
     }
     case MON_DATA_MET_GAME:
@@ -4276,8 +4309,12 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
         break;
     case MON_DATA_POKEBALL:
     {
+        #ifndef UBFIX
         u8 pokeball = *data;
         substruct3->pokeball = pokeball;
+        #else
+        SET8(substruct3->pokeball);
+        #endif
         break;
     }
     case MON_DATA_OT_GENDER:
@@ -4370,7 +4407,13 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
         break;
     case MON_DATA_IVS:
     {
+        #ifndef UBFIX
         u32 ivs = data[0] | (data[1] << 8) | (data[2] << 16) | (data[3] << 24);
+        #else
+        u32 ivs;
+        SET32(ivs);
+        #endif
+
         substruct3->hpIV = ivs & MAX_IV_MASK;
         substruct3->attackIV = (ivs >> 5) & MAX_IV_MASK;
         substruct3->defenseIV = (ivs >> 10) & MAX_IV_MASK;

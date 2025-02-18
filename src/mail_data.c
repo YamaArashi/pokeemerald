@@ -44,13 +44,18 @@ bool8 MonHasMail(struct Pokemon *mon)
 
 u8 GiveMailToMonByItemId(struct Pokemon *mon, u16 itemId)
 {
-    u8 heldItem[2];
     u8 id, i;
     u16 species;
     u32 personality;
+    
+    #ifndef UBFIX
+    u8 heldItem[2];
 
     heldItem[0] = itemId;
     heldItem[1] = itemId >> 8;
+    #else
+    u16 *heldItem = &itemId;
+    #endif
 
     for (id = 0; id < PARTY_SIZE; id++)
     {
@@ -110,7 +115,14 @@ u16 MailSpeciesToSpecies(u16 mailSpecies, u16 *buffer)
 
 u8 GiveMailToMon(struct Pokemon *mon, struct Mail *mail)
 {
+
+// Use a u16 pointer insted of a u8 heldItem as u16 is guaranteed to be aligned properly
+#ifndef UBFIX
     u8 heldItem[2];
+#else
+    u16 *heldItem;
+#endif
+
     u16 itemId = mail->itemId;
     u8 mailId = GiveMailToMonByItemId(mon, itemId);
 
@@ -121,8 +133,12 @@ u8 GiveMailToMon(struct Pokemon *mon, struct Mail *mail)
 
     SetMonData(mon, MON_DATA_MAIL, &mailId);
 
+#ifndef UBFIX
     heldItem[0] = itemId;
     heldItem[1] = itemId >> 8;
+#else
+    heldItem = &itemId;
+#endif
 
     SetMonData(mon, MON_DATA_HELD_ITEM, heldItem);
 
@@ -136,16 +152,28 @@ static bool32 UNUSED DummyMailFunc(void)
 
 void TakeMailFromMon(struct Pokemon *mon)
 {
-    u8 heldItem[2];
     u8 mailId;
 
     if (MonHasMail(mon))
     {
+        #ifdef UBFIX
+        u16 *heldItem;
+        u16 heldItemVar;
+        #else
+        u8 heldItem[2];
+        #endif
         mailId = GetMonData(mon, MON_DATA_MAIL);
         gSaveBlock1Ptr->mail[mailId].itemId = ITEM_NONE;
         mailId = MAIL_NONE;
+
+        #ifdef UBFIX
+        heldItemVar = ITEM_NONE;
+        heldItem = &heldItemVar;
+        #else
         heldItem[0] = ITEM_NONE;
         heldItem[1] = ITEM_NONE << 8;
+        #endif
+
         SetMonData(mon, MON_DATA_MAIL, &mailId);
         SetMonData(mon, MON_DATA_HELD_ITEM, heldItem);
     }
@@ -159,11 +187,18 @@ void ClearMailItemId(u8 mailId)
 u8 TakeMailFromMonAndSave(struct Pokemon *mon)
 {
     u8 i;
-    u8 newHeldItem[2];
     u8 newMailId;
+
+    #ifndef UBFIX
+    u8 newHeldItem[2];
 
     newHeldItem[0] = ITEM_NONE;
     newHeldItem[1] = ITEM_NONE << 8;
+    #else
+    u16 heldItemVar = ITEM_NONE;
+    u16 *newHeldItem = &heldItemVar;
+    #endif
+
     newMailId = MAIL_NONE;
 
     for (i = PARTY_SIZE; i < MAIL_COUNT; i++)
@@ -203,3 +238,4 @@ bool8 ItemIsMail(u16 itemId)
         return FALSE;
     }
 }
+

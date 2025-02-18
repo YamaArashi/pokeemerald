@@ -62,12 +62,22 @@ u8 ScriptGiveMon(u16 species, u8 level, u16 item, u32 unused1, u32 unused2, u8 u
 {
     u16 nationalDexNum;
     int sentToPc;
-    u8 heldItem[2];
     struct Pokemon mon;
+#ifndef UBFIX
+    u8 heldItem[2];
+#else
+    u16 *heldItem;
+#endif
 
     CreateMon(&mon, species, level, USE_RANDOM_IVS, FALSE, 0, OT_ID_PLAYER_ID, 0);
+
+#ifndef UBFIX
     heldItem[0] = item;
     heldItem[1] = item >> 8;
+#else
+    heldItem = &item;
+#endif
+
     SetMonData(&mon, MON_DATA_HELD_ITEM, heldItem);
     sentToPc = GiveMonToPlayer(&mon);
     nationalDexNum = SpeciesToNationalPokedexNum(species);
@@ -136,14 +146,17 @@ bool8 DoesPartyHaveEnigmaBerry(void)
 
 void CreateScriptedWildMon(u16 species, u8 level, u16 item)
 {
-    u8 heldItem[2];
-
     ZeroEnemyPartyMons();
     CreateMon(&gEnemyParty[0], species, level, USE_RANDOM_IVS, 0, 0, OT_ID_PLAYER_ID, 0);
     if (item)
     {
+#ifndef UBFIX
+        u8 heldItem[2];
         heldItem[0] = item;
         heldItem[1] = item >> 8;
+#else
+        u16 *heldItem = &item;
+#endif
         SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM, heldItem);
     }
 }

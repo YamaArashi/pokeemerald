@@ -1423,9 +1423,19 @@ void SetShoalItemFlag(u16 unused)
 void LoadWallyZigzagoon(void)
 {
     u16 monData;
+    #ifdef UBFIX
+    bool8 monDataU8;
+    #endif
+
     CreateMon(&gPlayerParty[0], SPECIES_ZIGZAGOON, 7, USE_RANDOM_IVS, FALSE, 0, OT_ID_PLAYER_ID, 0);
+    #ifdef UBFIX
+    monDataU8 = TRUE;
+    SetMonData(&gPlayerParty[0], MON_DATA_ABILITY_NUM, &monDataU8);
+    #else
     monData = TRUE;
     SetMonData(&gPlayerParty[0], MON_DATA_ABILITY_NUM, &monData);
+    #endif
+
     monData = MOVE_TACKLE;
     SetMonData(&gPlayerParty[0], MON_DATA_MOVE1, &monData);
     monData = MOVE_NONE;
