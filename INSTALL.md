@@ -519,7 +519,7 @@ Otherwise, follow the instructions below to install devkitARM.
     >   If the above command does not work, try the above command but replacing `apt` with `apt-get`.
     </details>
 
-2. Once `gdebi-core` is done installing, download the devkitPro pacman package [here](https://github.com/devkitPro/pacman/releases). The file to download is `devkitpro-pacman.amd64.deb`.
+2. Once `gdebi-core` is done installing, download the devkitPro pacman package [here](https://github.com/devkitPro/pacman/releases).
 3. Change directory to where the package was downloaded. For example, if the package file was saved to **C:\Users\\_\<user>_\Downloads** (the Downloads location for most users), enter this command, where *\<user> is your **Windows** username:
 
     ```bash
@@ -529,7 +529,7 @@ Otherwise, follow the instructions below to install devkitARM.
 4. Once the directory has been changed to the folder containing the devkitPro pacman package, run the following commands to install devkitARM.
 
     ```bash
-    sudo gdebi devkitpro-pacman.amd64.deb
+
     sudo dkp-pacman -Sy
     sudo dkp-pacman -S gba-dev
     ```
